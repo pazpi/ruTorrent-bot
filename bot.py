@@ -4,10 +4,10 @@
 #
 # TO DO:
 # make an initial request to set up your personal rutorrent seedmachine
-# add more command, like 
-#/torrent add torrent file
+# add more command like:
+# /torrent add torrent file
 # /setLabel to insert torrent with that label
-
+# /status to see the status of all existing torrent
 
 #import urllib
 import requests
