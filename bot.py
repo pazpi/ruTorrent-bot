@@ -3,9 +3,11 @@
 # /magnet to add a magnet link
 #
 # TO DO:
-# add more command, like
-# /torrent add torrent file
+# make an initial request to set up your personal rutorrent seedmachine
+# add more command, like 
+#/torrent add torrent file
 # /setLabel to insert torrent with that label
+
 
 #import urllib
 import requests
