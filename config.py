@@ -1,3 +1,2 @@
-#def api_key():
-#	token = '116051020:AAHrxECX7pDpDuQgTMYbamGVKLQCPxpVkKA'
-token = '116051020:AAHrxECX7pDpDuQgTMYbamGVKLQCPxpVkKA'
+TOKEN = '116051020:AAHrxECX7pDpDuQgTMYbamGVKLQCPxpVkKA'
+HOST = 'http://pazpi.noip.me:8080/'
