@@ -3,3 +3,4 @@ env/
 /.pydevproject
 /app.log
 /rutorrent.log
+/__pycache__
