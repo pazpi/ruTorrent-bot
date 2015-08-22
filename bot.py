@@ -13,6 +13,7 @@ import logging,coloredlogs
 from logging.handlers import RotatingFileHandler
 # requests module for basic http post
 import requests
+from requests.auth import HTTPBasicAuth
 # telegram module for easy work with bot conf
 import telegram
 # file used to store sensible data, like API key
@@ -26,6 +27,8 @@ lastMsgId = 0
 botName = 'ruTorrentPy'
 token = config.TOKEN
 HOST = config.HOST
+USERNAME = config.USERNAME
+PASSWORD = config.PASSWORD
 startTxt = "Hi! I'm a bot developed by @pazpi and @martinotu to add torrent to your seedmachine \nAvailable commands: \n- /start \n- \n- /help \n- /magnet \n- /host"
 infoTxt  = "Authors: @pazpi @martinotu \nGithub: https://github.com/pazpi/ruTorrent-bot \nBy using this bot you agree that your doing so at your own risk. Authors will not be responsible for any choices based on advices from this bot. And remember: keep seeding!"
 helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands: \n/megnet - Add torrent with magnetic link \n/help - This message will be shown \n/info - Show more info about me \n\nFor Example: \n/magnet magnet:?xt=urn:btih:828e86180150213c10677495565baef6b232dbdd&dn=archlinux-2015.08.01-dual.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce"
@@ -126,7 +129,7 @@ def GetCommand(msg):
             answer = startTxt
             logger.debug('Answer: startTxt')
         elif(command[2:8] == 'magnet'):
-            magnet(command)
+            addMagnet(command)
             answer = 'Manget added succesfully!'
             logger.debug('Answer: Manget added')
         elif(commands['host'] in command):
@@ -142,12 +145,12 @@ def GetCommand(msg):
             logger.debug('No command')
     return answer
 
-def magnet(torrent):
+def addMagnet(torrent):
     torrent = torrent[2:-2]
     url = host + 'ruTorrent/php/addtorrent.php?url=' + torrent
     # Test ArchLinux ISO
     #url = 'http://192.168.1.190/ruTorrent/php/addtorrent.php?url=' + 'magnet:?xt=urn:btih:828e86180150213c10677495565baef6b232dbdd&dn=archlinux-2015.08.01-dual.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce'
-    requests.post(url)
+    requests.post(url, auth=HTTPBasicAuth(USERNAME, PASSWORD))
 
 if __name__ == '__main__':
     main()
