@@ -46,6 +46,7 @@ def main(argv=None):
         Init()
 
 
+<<<<<<< Updated upstream
 def SetLogger():
     global logger
     logger = logging.getLogger(__name__)
@@ -78,6 +79,10 @@ def Init():
     
 
 def UpdateLoop():
+=======
+    LAST_UPDATE_ID = bot.getUpdates()[-1].update_id  # Get the latest update
+
+>>>>>>> Stashed changes
     while True:
         try:
             ManageUpdates()
@@ -106,6 +111,15 @@ def ManageUpdates():
                     bot.sendMessage(chat_id=chat_id, text=answer)
                 LAST_UPDATE_ID = update_id
 
+<<<<<<< Updated upstream
+=======
+            if LAST_UPDATE_ID < update_id:  # If newer than the initial
+                                            # LAST_UPDATE_ID
+                if text:
+                    rutorrent = magnet(text)
+                    bot.sendMessage(chat_id=chat_id, text="Torrent Addedd, Hurray! :D")
+                    LAST_UPDATE_ID = update_id
+>>>>>>> Stashed changes
 
 def GetCommand(msg):
     answer = ''
