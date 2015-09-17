@@ -18,6 +18,8 @@ from requests.auth import HTTPBasicAuth
 import telegram
 # file used to store sensible data, like API key
 import config
+# xmlrpc module for rtorrent communication
+import xmlrpc.client
 from time import sleep
 from _ast import Str
 
@@ -49,6 +51,7 @@ def main(argv=None):
 def SetLogger():
     global logger
     logger = logging.getLogger(__name__)
+    # NOSET DEBUG INFO WARNING ERROR CRITICAL
     logger.setLevel(logging.DEBUG)
 
     # Create a file handler where log is located
@@ -68,31 +71,34 @@ def Init():
     global LAST_UPDATE_ID
     # Create bot object
     global bot
+    # Creation of bot object
     bot = telegram.Bot(token)
-
+    # xmlrpc settings
+    server = xmlrpc.client.ServerProxy(HOST)
     # Get the latest update
     LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
     logger.info("-- Init -- LAST_UPDATE_ID: %s", LAST_UPDATE_ID)
+    #Infinite Loop
     UpdateLoop()
     return
 
 
 def UpdateLoop():
-#=======
     LAST_UPDATE_ID = bot.getUpdates()[-1].update_id  # Get the latest update
 
-#>>>>>>> Stashed changes
     while True:
         try:
             ManageUpdates()
             sleep(1)
         except Exception:
+            #Error
             logging.exception()
     logger.error("Exit from loop!")
 
 
 def ManageUpdates():
     global LAST_UPDATE_ID
+    # Fetch last message
     updates = bot.getUpdates(offset=LAST_UPDATE_ID)
     if(not updates):
         logger.error("Couldn't get updates")
@@ -110,15 +116,12 @@ def ManageUpdates():
                     bot.sendMessage(chat_id=chat_id, text=answer)
                 LAST_UPDATE_ID = update_id
 
-#<<<<<<< Updated upstream
-#=======
             if LAST_UPDATE_ID < update_id:  # If newer than the initial
                                             # LAST_UPDATE_ID
                 if text:
                     rutorrent = magnet(text)
                     bot.sendMessage(chat_id=chat_id, text="Torrent Addedd, Hurray! :D")
                     LAST_UPDATE_ID = update_id
-#>>>>>>> Stashed changes
 
 def GetCommand(msg):
     answer = ''
