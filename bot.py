@@ -5,11 +5,11 @@
 # TO DO:
 # make an initial request to set up your personal rutorrent seedmachine
 # add more command like:
-# /torrent add torrent file
+# /torrent add .torrent file
 # /setLabel to insert torrent with that label
 # /status to see the status of all existing torrent
 
-import logging#,coloredlogs
+import logging,coloredlogs
 from logging.handlers import RotatingFileHandler
 # requests module for basic http post
 import requests
@@ -33,7 +33,7 @@ USERNAME = config.USERNAME
 PASSWORD = config.PASSWORD
 startTxt = "Hi! I'm a bot developed by @pazpi and @martinotu to add torrent to your seedmachine \nAvailable commands: \n- /start \n- \n- /help \n- /magnet \n- /host"
 infoTxt  = "Authors: @pazpi @martinotu \nGithub: https://github.com/pazpi/ruTorrent-bot \nBy using this bot you agree that your doing so at your own risk. Authors will not be responsible for any choices based on advices from this bot. And remember: keep seeding!"
-helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands: \n/megnet - Add torrent with magnetic link \n/help - This message will be shown \n/info - Show more info about me \n\nFor Example: \n/magnet magnet:?xt=urn:btih:828e86180150213c10677495565baef6b232dbdd&dn=archlinux-2015.08.01-dual.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce"
+helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands: \n/magnet - Add torrent with magnetic link \n/help - This message will be shown \n/info - Show more info about me \n\nFor Example: \n/magnet magnet:?xt=urn:btih:828e86180150213c10677495565baef6b232dbdd&dn=archlinux-2015.08.01-dual.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce"
 
 commands = {
 'start': '/start',
@@ -84,6 +84,8 @@ def Init():
 
 
 def UpdateLoop():
+
+
     LAST_UPDATE_ID = bot.getUpdates()[-1].update_id  # Get the latest update
 
     while True:
@@ -146,7 +148,7 @@ def GetCommand(msg):
             logger.debug('Answer: startTxt')
         elif(command[2:8] == 'magnet'):
             addMagnet(command)
-            answer = 'Manget added succesfully!'
+            answer = 'Magnet added succesfully!'
             logger.debug('Answer: Manget added')
         elif(commands['host'] in command):
 
