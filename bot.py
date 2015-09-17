@@ -9,7 +9,7 @@
 # /setLabel to insert torrent with that label
 # /status to see the status of all existing torrent
 
-import logging,coloredlogs
+import logging#,coloredlogs
 from logging.handlers import RotatingFileHandler
 # requests module for basic http post
 import requests
