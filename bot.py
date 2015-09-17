@@ -46,23 +46,22 @@ def main(argv=None):
         Init()
 
 
-<<<<<<< Updated upstream
 def SetLogger():
     global logger
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
-    
+
     # Create a file handler where log is located
     handler = RotatingFileHandler('rutorrent.log', mode='a', maxBytes=5*1024*1024, backupCount=5, encoding=None, delay=0)
     handler.setLevel(logging.DEBUG)
-    
+
     # Create a logging format
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(funcName)s(%(lineno)d) %(message)s')
     handler.setFormatter(formatter)
-    
+
     # Add the handlers to the logger
     logger.addHandler(handler)
-    
+
     logger.info('Log inizialized')
 
 def Init():
@@ -70,19 +69,19 @@ def Init():
     # Create bot object
     global bot
     bot = telegram.Bot(token)
-    
+
     # Get the latest update
-    LAST_UPDATE_ID = bot.getUpdates()[-1].update_id  
+    LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
     logger.info("-- Init -- LAST_UPDATE_ID: %s", LAST_UPDATE_ID)
     UpdateLoop()
     return
-    
+
 
 def UpdateLoop():
-=======
+#=======
     LAST_UPDATE_ID = bot.getUpdates()[-1].update_id  # Get the latest update
 
->>>>>>> Stashed changes
+#>>>>>>> Stashed changes
     while True:
         try:
             ManageUpdates()
@@ -90,7 +89,7 @@ def UpdateLoop():
         except Exception:
             logging.exception()
     logger.error("Exit from loop!")
-    
+
 
 def ManageUpdates():
     global LAST_UPDATE_ID
@@ -111,15 +110,15 @@ def ManageUpdates():
                     bot.sendMessage(chat_id=chat_id, text=answer)
                 LAST_UPDATE_ID = update_id
 
-<<<<<<< Updated upstream
-=======
+#<<<<<<< Updated upstream
+#=======
             if LAST_UPDATE_ID < update_id:  # If newer than the initial
                                             # LAST_UPDATE_ID
                 if text:
                     rutorrent = magnet(text)
                     bot.sendMessage(chat_id=chat_id, text="Torrent Addedd, Hurray! :D")
                     LAST_UPDATE_ID = update_id
->>>>>>> Stashed changes
+#>>>>>>> Stashed changes
 
 def GetCommand(msg):
     answer = ''
@@ -147,14 +146,14 @@ def GetCommand(msg):
             answer = 'Manget added succesfully!'
             logger.debug('Answer: Manget added')
         elif(commands['host'] in command):
-            
+
             if(host == '[]'):
                 answer = config.HOST
                 logger.debug('Answer: Host replay')
             else:
                 HOST = host
                 answer = 'Host set'
-                logger.debug('Answer: Host set')                  
+                logger.debug('Answer: Host set')
         else:
             logger.debug('No command')
     return answer
