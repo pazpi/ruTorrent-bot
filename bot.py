@@ -9,7 +9,7 @@
 # /setLabel to insert torrent with that label
 # /status to see the status of all existing torrent
 
-import logging,coloredlogs
+import logging, coloredlogs
 from logging.handlers import RotatingFileHandler
 # requests module for basic http post
 import requests
@@ -32,14 +32,14 @@ HOST = config.HOST
 USERNAME = config.USERNAME
 PASSWORD = config.PASSWORD
 startTxt = "Hi! I'm a bot developed by @pazpi and @martinotu to add torrent to your seedmachine \nAvailable commands: \n- /start \n- \n- /help \n- /magnet \n- /host"
-infoTxt  = "Authors: @pazpi @martinotu \nGithub: https://github.com/pazpi/ruTorrent-bot \nBy using this bot you agree that your doing so at your own risk. Authors will not be responsible for any choices based on advices from this bot. And remember: keep seeding!"
+infoTxt = "Authors: @pazpi @martinotu \nGithub: https://github.com/pazpi/ruTorrent-bot \nBy using this bot you agree that your doing so at your own risk. Authors will not be responsible for any choices based on advices from this bot. And remember: keep seeding!"
 helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands: \n/magnet - Add torrent with magnetic link \n/help - This message will be shown \n/info - Show more info about me \n\nFor Example: \n/magnet magnet:?xt=urn:btih:828e86180150213c10677495565baef6b232dbdd&dn=archlinux-2015.08.01-dual.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce"
 
 commands = {
 'start': '/start',
 'info': '/info',
 'help': '/help',
-'host': '/host'
+'config': '/config'
 }
 
 def main(argv=None):
@@ -55,7 +55,7 @@ def SetLogger():
     logger.setLevel(logging.DEBUG)
 
     # Create a file handler where log is located
-    handler = RotatingFileHandler('rutorrent.log', mode='a', maxBytes=5*1024*1024, backupCount=5, encoding=None, delay=0)
+    handler = RotatingFileHandler('rutorrent.log', mode='a', maxBytes=5 * 1024 * 1024, backupCount=5, encoding=None, delay=0)
     handler.setLevel(logging.DEBUG)
 
     # Create a logging format
@@ -69,6 +69,8 @@ def SetLogger():
 
 def Init():
     global LAST_UPDATE_ID
+    # Fetch last message number
+    LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
     # Create bot object
     global bot
     # Creation of bot object
@@ -76,30 +78,28 @@ def Init():
     # xmlrpc settings
     server = xmlrpc.client.ServerProxy(HOST)
     # Get the latest update
-    LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
     logger.info("-- Init -- LAST_UPDATE_ID: %s", LAST_UPDATE_ID)
-    #Infinite Loop
+    # Infinite Loop
     UpdateLoop()
     return
 
 
 def UpdateLoop():
 
-
-    LAST_UPDATE_ID = bot.getUpdates()[-1].update_id  # Get the latest update
+    # LAST_UPDATE_ID = bot.getUpdates()[-1].update_id  # Get the latest update
 
     while True:
         try:
             ManageUpdates()
             sleep(1)
         except Exception:
-            #Error
+            # Error
             logging.exception()
     logger.error("Exit from loop!")
 
 
 def ManageUpdates():
-    global LAST_UPDATE_ID
+    # global LAST_UPDATE_ID
     # Fetch last message
     updates = bot.getUpdates(offset=LAST_UPDATE_ID)
     if(not updates):
@@ -128,37 +128,59 @@ def ManageUpdates():
 def GetCommand(msg):
     answer = ''
     if(msg):
-        command = msg.split()[:1]
-        command = str(command)
-        host = msg.split()[1:]
-        host = str(host)
-        command = str(command)
-        if("/" in command):
-            logger.debug('Command: ' + str(command))
+        par = []
+        for item in msg.spit():
+            par[item] = msg.spit(item + (+item))
+            par[item] = str(par[item])
+        #command = msg.split()[:1]
+        #command = str(command)
+        #host = msg.split()[1:2]
+        #username = msg.split()[2:3]
+        #password = msg.split()[3:4]
+        #host = str(host)
+        #command = str(command)
+        if("/" in par[0]):
+            logger.debug('Command: ' + par[0])
         else:
             logger.debug('Message: ' + str(command))
-        if(commands['help'] in command):
+        if(commands['help'] in par[0]):
             answer = helpTxt
             logger.debug('Answer: helpTxt')
-        elif(commands['info'] in command):
+        elif(commands['info'] in par[0]):
             answer = infoTxt
             logger.debug('Answer: infoTxt')
-        elif(commands['start'] in command):
+        elif(commands['start'] in par[0]):
             answer = startTxt
             logger.debug('Answer: startTxt')
-        elif(command[2:8] == 'magnet'):
-            addMagnet(command)
+        elif(par[0][2:8] == 'magnet'):
+            addMagnet(par[0])
             answer = 'Magnet added succesfully!'
             logger.debug('Answer: Manget added')
-        elif(commands['host'] in command):
-
-            if(host == '[]'):
+        elif(commands['config'] in par[0]):
+            if(par[1] == '[]'):
                 answer = config.HOST
                 logger.debug('Answer: Host replay')
             else:
-                HOST = host
+                # IMPLEMENT: save host name to file
+                HOST = par[1]
                 answer = 'Host set'
                 logger.debug('Answer: Host set')
+            if(par[2] == '[]'):
+                answer = config.USERNAME
+                logger.debug('Answer: username replay')
+            else:
+                # IMPLEMENT: save host name to file
+                USERNAME = par[2]
+                answer = 'Host set'
+                logger.debug('Answer: username set')
+            if(par[3] == '[]'):
+                answer = config.PASSWORD
+                logger.debug('Answer: password replay')
+            else:
+                # IMPLEMENT: save host name to file
+                PASSWORD = par[3]
+                answer = 'Host set'
+                logger.debug('Answer: password set')
         else:
             logger.debug('No command')
     return answer
@@ -167,7 +189,7 @@ def addMagnet(torrent):
     torrent = torrent[2:-2]
     url = host + 'ruTorrent/php/addtorrent.php?url=' + torrent
     # Test ArchLinux ISO
-    #url = 'http://192.168.1.190/ruTorrent/php/addtorrent.php?url=' + 'magnet:?xt=urn:btih:828e86180150213c10677495565baef6b232dbdd&dn=archlinux-2015.08.01-dual.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce'
+    # url = 'http://192.168.1.190/ruTorrent/php/addtorrent.php?url=' + 'magnet:?xt=urn:btih:828e86180150213c10677495565baef6b232dbdd&dn=archlinux-2015.08.01-dual.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce'
     requests.post(url, auth=HTTPBasicAuth(USERNAME, PASSWORD))
 
 if __name__ == '__main__':
