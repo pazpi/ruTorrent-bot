@@ -18,10 +18,13 @@ from requests.auth import HTTPBasicAuth
 import telegram
 # file used to store sensible data, like API key
 import config
+import init
+import telegram_bot
 # xmlrpc module for rtorrent communication
 import xmlrpc.client
 from time import sleep
 from _ast import Str
+from test.test_ttk_guionly import button
 
 logger = {}
 last_update = 0
@@ -72,25 +75,25 @@ def Init():
     # Fetch last message number
     LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
     # Create bot object
-    global bot
+    #global bot
     # Creation of bot object
-    bot = telegram.Bot(token)
-    # xmlrpc settings
+    #bot = telegram.Bot(token)
+    # xmlrpc settingsur
     server = xmlrpc.client.ServerProxy(HOST)
     # Get the latest update
     logger.info("-- Init -- LAST_UPDATE_ID: %s", LAST_UPDATE_ID)
     # Infinite Loop
-    UpdateLoop()
+    UpdateLoop(LAST_UPDATE_ID)
     return
 
 
-def UpdateLoop():
+def UpdateLoop(LAST_UPDATE_ID):
 
     # LAST_UPDATE_ID = bot.getUpdates()[-1].update_id  # Get the latest update
 
     while True:
         try:
-            ManageUpdates()
+            ManageUpdates(LAST_UPDATE_ID)
             sleep(1)
         except Exception:
             # Error
@@ -98,7 +101,7 @@ def UpdateLoop():
     logger.error("Exit from loop!")
 
 
-def ManageUpdates():
+def ManageUpdates(LAST_UPDATE_ID):
     # global LAST_UPDATE_ID
     # Fetch last message
     updates = bot.getUpdates(offset=LAST_UPDATE_ID)
@@ -110,6 +113,7 @@ def ManageUpdates():
         chat_id = update.message.chat.id
         update_id = update.update_id
         answer = ''
+        init.config_start(chat_id)
         # If newer than the initial
         if LAST_UPDATE_ID < update_id:
             if command:
@@ -191,6 +195,14 @@ def addMagnet(torrent):
     # Test ArchLinux ISO
     # url = 'http://192.168.1.190/ruTorrent/php/addtorrent.php?url=' + 'magnet:?xt=urn:btih:828e86180150213c10677495565baef6b232dbdd&dn=archlinux-2015.08.01-dual.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce'
     requests.post(url, auth=HTTPBasicAuth(USERNAME, PASSWORD))
+
+def setKeyboard(*args):
+    for arg in len(args):
+        keyboard.append(arg)
+    reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
+    bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)
+    
+
 
 if __name__ == '__main__':
     main()
