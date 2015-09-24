@@ -1,4 +1,4 @@
 TOKEN = ''
-HOST = 'http://pazpi.noip.me:8080/'
+HOST = ''
 USERNAME = ''
 PASSWORD = ''
