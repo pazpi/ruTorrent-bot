@@ -23,8 +23,6 @@ import telegram_bot
 # xmlrpc module for rtorrent communication
 import xmlrpc.client
 from time import sleep
-from _ast import Str
-from test.test_ttk_guionly import button
 
 logger = {}
 last_update = 0
@@ -71,34 +69,31 @@ def SetLogger():
     logger.info('Log inizialized')
 
 def Init():
-    global LAST_UPDATE_ID
-    # Fetch last message number
-    LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
     # Create bot object
-    #global bot
+    global bot
     # Creation of bot object
-    #bot = telegram.Bot(token)
-    # xmlrpc settingsur
+    bot = telegram.Bot(token)
+    # Fetch last message number
+    global LAST_UPDATE_ID
+    LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
+    # xmlrpc settings
     server = xmlrpc.client.ServerProxy(HOST)
     # Get the latest update
-    logger.info("-- Init -- LAST_UPDATE_ID: %s", LAST_UPDATE_ID)
+    logger.info("-- Init -- BOT creation")
     # Infinite Loop
-    UpdateLoop(LAST_UPDATE_ID)
+    UpdateLoop()
     return
 
 
 def UpdateLoop(LAST_UPDATE_ID):
-
-    # LAST_UPDATE_ID = bot.getUpdates()[-1].update_id  # Get the latest update
-
     while True:
         try:
-            ManageUpdates(LAST_UPDATE_ID)
+            ManageUpdates()
             sleep(1)
         except Exception:
             # Error
             logging.exception()
-    logger.error("Exit from loop!")
+            logger.error("Exit from loop!")
 
 
 def ManageUpdates(LAST_UPDATE_ID):
@@ -132,62 +127,47 @@ def ManageUpdates(LAST_UPDATE_ID):
 def GetCommand(msg):
     answer = ''
     if(msg):
-        par = []
-        for item in msg.spit():
-            par[item] = msg.spit(item + (+item))
-            par[item] = str(par[item])
-        #command = msg.split()[:1]
-        #command = str(command)
-        #host = msg.split()[1:2]
-        #username = msg.split()[2:3]
-        #password = msg.split()[3:4]
-        #host = str(host)
-        #command = str(command)
-        if("/" in par[0]):
-            logger.debug('Command: ' + par[0])
+        command = msg.split()[:1]
+        command = str(command)
+        par = msg.split()[1:]
+        par = str(par)
+        if("/" in command):
+            logger.debug('Command: ' + command)
         else:
-            logger.debug('Message: ' + str(command))
-        if(commands['help'] in par[0]):
+            logger.debug('Message: ' + command)
+        if(commands['help'] in command):
             answer = helpTxt
             logger.debug('Answer: helpTxt')
-        elif(commands['info'] in par[0]):
+        elif(commands['info'] in command):
             answer = infoTxt
             logger.debug('Answer: infoTxt')
-        elif(commands['start'] in par[0]):
+        elif(commands['start'] in command):
             answer = startTxt
             logger.debug('Answer: startTxt')
-        elif(par[0][2:8] == 'magnet'):
-            addMagnet(par[0])
+        elif(commands['hash'] in command):
+            addMagnet(Hash2Magnet(par))
+            answer = "Hash added succesfully"
+        elif(command[2:8] == 'magnet'):
+            addMagnet(command)
             answer = 'Magnet added succesfully!'
             logger.debug('Answer: Manget added')
-        elif(commands['config'] in par[0]):
-            if(par[1] == '[]'):
+        elif(commands['host'] in command):
+            if(par == '[]'):
                 answer = config.HOST
                 logger.debug('Answer: Host replay')
             else:
-                # IMPLEMENT: save host name to file
-                HOST = par[1]
                 answer = 'Host set'
                 logger.debug('Answer: Host set')
-            if(par[2] == '[]'):
-                answer = config.USERNAME
-                logger.debug('Answer: username replay')
-            else:
-                # IMPLEMENT: save host name to file
-                USERNAME = par[2]
-                answer = 'Host set'
-                logger.debug('Answer: username set')
-            if(par[3] == '[]'):
-                answer = config.PASSWORD
-                logger.debug('Answer: password replay')
-            else:
-                # IMPLEMENT: save host name to file
-                PASSWORD = par[3]
-                answer = 'Host set'
-                logger.debug('Answer: password set')
         else:
+            answer = 'No command or magnet found'
             logger.debug('No command')
     return answer
+
+
+def Hash2Magnet(hash):
+    magnet = ''
+    megnet = "magnet:?xt=urn:btih:" + hash
+    return magnet
 
 def addMagnet(torrent):
     torrent = torrent[2:-2]
@@ -202,7 +182,6 @@ def setKeyboard(*args):
     reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
     bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)
     
-
 
 if __name__ == '__main__':
     main()
