@@ -15,6 +15,7 @@
 # /torrent add .torrent file
 # /status to see the status of all existing torrent
 # /hash to add a torrent based on his hash
+# add the option to have multiple session
 
 import logging, coloredlogs
 from logging.handlers import RotatingFileHandler
