@@ -1,15 +1,27 @@
-# ruTorrent Bot for add torrent to our seedmachine
+# main.py
+# ruTorrent Bot for add torrent and monitorate your seedmachine
 # command list:
-# /magnet to add a magnet link
+# /start
+# /help
+# /info
+# /config
+# /hash
 #
 # TO DO:
-# make an initial request to set up your personal rutorrent seedmachine
+# After the description setted with the BotFather user will send the /start command
+# Now starts the setting process where the bot will ask first the host, port, user and password for logging in to your rutorrent page.
+# Future changes to this setting can be done by using /config where the keyboard change to set HOST and PORT
+# So selecting Host bot will ask the url and after that the kwybord return to the sepcific one for config until you select EXIT
+# To add magnet you only need to send the magnet link without any command
+
 # add more command like:
 # /torrent add .torrent file
-# /setLabel to insert torrent with that label
 # /status to see the status of all existing torrent
+# DONE /hash to add a torrent based on his hash
+# add the option to have multiple session
 
 import logging, coloredlogs
+import auxiliary_module
 from logging.handlers import RotatingFileHandler
 # requests module for basic http post
 import requests
@@ -40,7 +52,8 @@ commands = {
 'start': '/start',
 'info': '/info',
 'help': '/help',
-'config': '/config'
+'config': '/config',
+'hash': '/hash'
 }
 
 def main(argv=None):
@@ -70,9 +83,10 @@ def SetLogger():
 
 def Init():
     # Create bot object
-    global bot
+    bot = telegram_bot.Bot()
+    #global bot
     # Creation of bot object
-    bot = telegram.Bot(token)
+    #bot = telegram.Bot(token)
     # Fetch last message number
     global LAST_UPDATE_ID
     LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
