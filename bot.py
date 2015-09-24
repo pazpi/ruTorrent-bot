@@ -46,7 +46,8 @@ commands = {
 'info': '/info',
 'help': '/help',
 'host': '/host',
-'config': '/config'
+'config': '/config',
+'hash':'/hash'
 }
 
 def main(argv=None):
@@ -144,6 +145,9 @@ def GetCommand(msg):
         elif(commands['start'] in command):
             answer = startTxt
             logger.debug('Answer: startTxt')
+        elif(commands['hash'] in command):
+            addMagnet(Hash2Magnet(host))
+            answer = "Hash added succesfully"
         elif(command[2:8] == 'magnet'):
             addMagnet(command)
             answer = 'Magnet added succesfully!'
@@ -159,6 +163,13 @@ def GetCommand(msg):
             answer = 'No command or magnet found'
             logger.debug('No command')
     return answer
+
+
+def Hash2Magnet(hash):
+    magnet = ''
+    megnet = "magnet:?xt=urn:btih:" + hash
+    return magnet
+    
 
 def addMagnet(torrent):
     torrent = torrent[2:-2]
