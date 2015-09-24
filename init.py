@@ -1,15 +1,12 @@
-"""
-Init file
-
-/start -> config bot -> host & port
-
-- Custom keyboard
-"""
+# init.py
+#Init file
+#/start -> config bot -> host & port
+#- Custom keyboard
 
 import telegram
 import telegram_bot
 import config
-import bot
+import main
 
 def config_start(chat_id):
     """keyboard_host_port = [[ "HOST", "PORT", "EXIT"]]
