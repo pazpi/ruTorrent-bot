@@ -3,6 +3,11 @@ import logging
 import telegram
 import config
 
+startTxt = "Hi! I'm a bot developed by @pazpi and @martinotu to add torrent to your seedmachine \nAvailable commands: \n- /start \n- \n- /help \n- /magnet \n- /host"
+infoTxt = "Authors: @pazpi @martinotu \nGithub: https://github.com/pazpi/ruTorrent-bot \nBy using this bot you agree that your doing so at your own risk. Authors will not be responsible for any choices based on advices from this bot. And remember: keep seeding!"
+helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands: \n/magnet - Add torrent with magnetic link \n/help - This message will be shown \n/info - Show more info about me \n\nFor Example: \n/magnet magnet:?xt=urn:btih:828e86180150213c10677495565baef6b232dbdd&dn=archlinux-2015.08.01-dual.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce"
+
+
 module_logger = logging.getLogger(__name__)
 
 class Bot:
@@ -15,10 +20,18 @@ class Bot:
         self.logger = logging.getLogger("telegram_bot.Bot")
         self.logger.info("Bot creation")
         self.LAST_UPDATE_ID = self.bot.getUpdates()[-1].update_id
-    
-    def Update(self):
+
+    def update(self):
         updates = self.bot.getUpdates(offset=self.LAST_UPDATE_ID)
         for update in updates:
             self.command = update.message.text
             self.chat_id = update.message.chat.id
             self.update_id = update.update_id
+
+    def lastMessage(self):
+
+        return message
+
+    def firstConfig(self):
+        self.sendMessage(chat_id=self.chat_id, text=startTxt)
+        self.sendMessage(chat_id=self.chat_id, text="Tell me the host address \n Es: http://myaddress.me")
