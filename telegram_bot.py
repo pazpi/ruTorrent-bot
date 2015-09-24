@@ -12,7 +12,7 @@ module_logger = logging.getLogger(__name__)
 
 class Bot:
     bot = telegram.Bot(config.TOKEN)
-    command = ''
+    text = ''
     chat_id = ''
     update_id = ''
     LAST_UPDATE_ID = ''
@@ -24,14 +24,25 @@ class Bot:
     def update(self):
         updates = self.bot.getUpdates(offset=self.LAST_UPDATE_ID)
         for update in updates:
-            self.command = update.message.text
+            self.text = update.message.text
             self.chat_id = update.message.chat.id
             self.update_id = update.update_id
 
     def lastMessage(self):
-
+        self.update()
+        message = self.text
         return message
 
     def firstConfig(self):
         self.sendMessage(chat_id=self.chat_id, text=startTxt)
         self.sendMessage(chat_id=self.chat_id, text="Tell me the host address \n Es: http://myaddress.me")
+        address = lastMessage()
+        self.sendMessage(chat_id=self.chat_id, text="Tell me the host port \n Es: 8080")
+        port = lastMessage()
+        self.sendMessage(chat_id=self.chat_id, text="Tell me the host username")
+        username = lastMessage()
+        self.sendMessage(chat_id=self.chat_id, text="Tell me the host password")
+        password = lastMessage()
+        rispCorrec = "Correct? \nAddress: " + address + "\nPort: "+ port + "\nUsername: "+ username + "\nPassword: "+ password
+        self.sendMessage(chat_id=self.chat_id, text=rispCorrec)
+        #to implement the database to save all datas
