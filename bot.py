@@ -1,13 +1,20 @@
-# ruTorrent Bot for add torrent to our seedmachine
+# ruTorrent Bot for add torrent and monitorate your seedmachine
 # command list:
-# /magnet to add a magnet link
+# /help
+# /info
+# /config
 #
 # TO DO:
-# make an initial request to set up your personal rutorrent seedmachine
+# After the description setted with the BotFather user will send the /start command
+# Now starts the setting process where the bot will ask first the host, port, user and password for logging in to your rutorrent page.
+# Future changes to this setting can be done by using /config where the keyboard change to set HOST and PORT
+# So selecting Host bot will ask the url and after that the kwybord return to the sepcific one for config until you select EXIT
+# To add magnet you only need to send the magnet link without any command
+
 # add more command like:
 # /torrent add .torrent file
-# /setLabel to insert torrent with that label
 # /status to see the status of all existing torrent
+# /hash to add a torrent based on his hash
 
 import logging, coloredlogs
 from logging.handlers import RotatingFileHandler
