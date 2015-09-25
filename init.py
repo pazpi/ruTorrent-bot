@@ -4,7 +4,7 @@
 #- Custom keyboard
 
 import telegram
-import telegram_bot
+import botclass
 import config
 import main
 
