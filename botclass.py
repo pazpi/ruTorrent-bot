@@ -28,21 +28,30 @@ class Bot:
             self.chat_id = update.message.chat.id
             self.update_id = update.update_id
 
-    def lastMessage(self):
+    def fetchLastMsg(self):
         self.update()
         message = self.text
         return message
 
     def firstConfig(self):
-        self.sendMessage(chat_id=self.chat_id, text=startTxt)
-        self.sendMessage(chat_id=self.chat_id, text="Tell me the host address \n Es: http://myaddress.me")
-        address = lastMessage()
-        self.sendMessage(chat_id=self.chat_id, text="Tell me the host port \n Es: 8080")
-        port = lastMessage()
-        self.sendMessage(chat_id=self.chat_id, text="Tell me the host username")
+        self.sendMsg(startTxt)
+        self.sendMsg("Tell me the host address \n Es: http://myaddress.me")
+        address = fetchLastMsg()
+        self.sendMsg("Tell me the host port \n Es: 8080")
+        port = fetchLastMsg()
+        self.sendMsg("Tell me the host username")
         username = lastMessage()
-        self.sendMessage(chat_id=self.chat_id, text="Tell me the host password")
-        password = lastMessage()
+        self.sendMsg("Tell me the host password")
+        password = fetchLastMsg()
         rispCorrec = "Correct? \nAddress: " + address + "\nPort: "+ port + "\nUsername: "+ username + "\nPassword: "+ password
-        self.sendMessage(chat_id=self.chat_id, text=rispCorrec)
+        self.sendMsg(rispCorrec)
         #to implement the database to save all datas
+        
+    def helpMessage(self):
+        self.sendMsg(helpTxt)
+        
+    def infoMessage(self):
+        self.sendMsg(infoTxt)
+
+    def sendMsg(self, text):
+        self.bot.sendMessage(chat_id=self.chat_id, text=text)
