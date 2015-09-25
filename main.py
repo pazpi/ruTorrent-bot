@@ -21,7 +21,7 @@
 # add the option to have multiple session
 
 import logging, coloredlogs
-import auxiliary_module
+#import auxiliary_module
 from logging.handlers import RotatingFileHandler
 # requests module for basic http post
 import requests
@@ -31,7 +31,7 @@ import telegram
 # file used to store sensible data, like API key
 import config
 import init
-import telegram_bot
+import botclass
 # xmlrpc module for rtorrent communication
 import xmlrpc.client
 from time import sleep
@@ -64,15 +64,13 @@ def SetLogger():
     logger = logging.getLogger(__name__)
     # NOSET DEBUG INFO WARNING ERROR CRITICAL
     logger.setLevel(logging.DEBUG)
-
     # Create a file handler where log is located
-    handler = RotatingFileHandler('rutorrent.log', mode='a', maxBytes=5 * 1024 * 1024, backupCount=5, encoding=None, delay=0)
+    handler = RotatingFileHandler('rutorrent.log', mode='a', maxBytes=5 * 1024 * 1024,
+                                  backupCount=5, encoding=None, delay=0)
     handler.setLevel(logging.DEBUG)
-
     # Create a logging format
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(funcName)s(%(lineno)d) %(message)s')
     handler.setFormatter(formatter)
-
     # Add the handlers to the logger
     logger.addHandler(handler)
 
@@ -80,13 +78,15 @@ def SetLogger():
 
 def Init():
     # Create bot object
-    bot = telegram_bot.Bot()
+    global bot
+    bot = botclass.Bot()
     #global bot
     # Creation of bot object
     #bot = telegram.Bot(token)
     # Fetch last message number
-    global LAST_UPDATE_ID
-    LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
+    #global LAST_UPDATE_ID
+    #LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
+    #LAST_UPDATE_ID = bot.LAST_UPDATE_ID
     # xmlrpc settings
     server = xmlrpc.client.ServerProxy(HOST)
     # Get the latest update
@@ -96,44 +96,69 @@ def Init():
     return
 
 
-def UpdateLoop(LAST_UPDATE_ID):
+def UpdateLoop():
     while True:
         try:
             ManageUpdates()
             sleep(1)
         except Exception:
             # Error
-            logging.exception()
+            #logging.exception()
             logger.error("Exit from loop!")
 
 
-def ManageUpdates(LAST_UPDATE_ID):
+# def ManageUpdates():
+#     # global LAST_UPDATE_ID
+#     LAST_UPDATE_ID = bot.LAST_UPDATE_ID
+#     # Fetch last message
+#     updates = bot.getUpdates(offset=LAST_UPDATE_ID)
+#     if(not updates):
+#         logger.error("Couldn't get updates")
+#         return
+#     for update in updates:
+#         command = update.message.text
+#         chat_id = update.message.chat.id
+#         update_id = update.update_id
+#         answer = ''
+#         init.config_start(chat_id)
+#         # If newer than the initial
+#         if LAST_UPDATE_ID < update_id:
+#             if command:
+#                 answer = GetCommand(command)
+#                 if(answer):
+#                     bot.sendMessage(chat_id=chat_id, text=answer)
+#                 LAST_UPDATE_ID = update_id
+# 
+#             if LAST_UPDATE_ID < update_id:  # If newer than the initial
+#                                             # LAST_UPDATE_ID
+#                 if text:
+#                     rutorrent = magnet(text)
+#                     bot.sendMessage(chat_id=chat_id, text="Torrent Addedd, Hurray! :D")
+#                     LAST_UPDATE_ID = update_id
+
+
+def ManageUpdates():
     # global LAST_UPDATE_ID
+    #LAST_UPDATE_ID = bot.LAST_UPDATE_ID
     # Fetch last message
-    updates = bot.getUpdates(offset=LAST_UPDATE_ID)
-    if(not updates):
-        logger.error("Couldn't get updates")
-        return
-    for update in updates:
-        command = update.message.text
-        chat_id = update.message.chat.id
-        update_id = update.update_id
-        answer = ''
-        init.config_start(chat_id)
-        # If newer than the initial
-        if LAST_UPDATE_ID < update_id:
-            if command:
-                answer = GetCommand(command)
-                if(answer):
-                    bot.sendMessage(chat_id=chat_id, text=answer)
+    bot.update()
+    answer = ''
+    init.config_start(chat_id)
+    # If newer than the initial
+    if bot.LAST_UPDATE_ID < bot.update_id:
+        if bot.command:
+            answer = GetCommand(bot.command)
+            if(answer):
+                bot.sendMessage(chat_id=chat_id, text=answer)
+            LAST_UPDATE_ID = update_id
+    
+        if LAST_UPDATE_ID < update_id:  # If newer than the initial
+                                        # LAST_UPDATE_ID
+            if text:
+                rutorrent = magnet(text)
+                bot.sendMessage(chat_id=chat_id, text="Torrent Addedd, Hurray! :D")
                 LAST_UPDATE_ID = update_id
 
-            if LAST_UPDATE_ID < update_id:  # If newer than the initial
-                                            # LAST_UPDATE_ID
-                if text:
-                    rutorrent = magnet(text)
-                    bot.sendMessage(chat_id=chat_id, text="Torrent Addedd, Hurray! :D")
-                    LAST_UPDATE_ID = update_id
 
 def GetCommand(msg):
     answer = ''
