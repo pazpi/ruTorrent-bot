@@ -40,16 +40,20 @@ class Bot:
         self.sendMsg("Tell me the host port \n Es: 8080")
         port = fetchLastMsg()
         self.sendMsg("Tell me the host username")
-        username = lastMessage()
+        username = fetchLastMsg()
         self.sendMsg("Tell me the host password")
         password = fetchLastMsg()
         rispCorrec = "Correct? \nAddress: " + address + "\nPort: "+ port + "\nUsername: "+ username + "\nPassword: "+ password
         self.sendMsg(rispCorrec)
-        #to implement the database to save all datas
-        
+        #to implement the database to save all datas. for now we can put info in the config.py file
+        config.ADDRESS = address
+        config.PORT = port
+        config.USERNAME = username
+        config.PASSWORD = password
+
     def helpMessage(self):
         self.sendMsg(helpTxt)
-        
+
     def infoMessage(self):
         self.sendMsg(infoTxt)
 

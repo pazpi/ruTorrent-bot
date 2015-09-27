@@ -36,12 +36,13 @@ import botclass
 import xmlrpc.client
 from time import sleep
 
+
 logger = {}
 last_update = 0
 lastMsgId = 0
 botName = 'ruTorrentPy'
 token = config.TOKEN
-HOST = config.HOST
+ADDRESS = config.ADDRESS
 USERNAME = config.USERNAME
 PASSWORD = config.PASSWORD
 
@@ -57,7 +58,6 @@ def main(argv=None):
     SetLogger()
     if argv is None or len(argv) <= 1:
         Init()
-
 
 def SetLogger():
     global logger
@@ -88,22 +88,21 @@ def Init():
     #LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
     #LAST_UPDATE_ID = bot.LAST_UPDATE_ID
     # xmlrpc settings
-    server = xmlrpc.client.ServerProxy(HOST)
+    # server = xmlrpc.client.ServerProxy(HOST)
     # Get the latest update
     logger.info("-- Init -- BOT creation")
     # Infinite Loop
     UpdateLoop()
     return
 
-
 def UpdateLoop():
     while True:
         try:
             ManageUpdates()
-            sleep(1)
+            sleep(0.5)
         except Exception:
             # Error
-            #logging.exception()
+            # logging.exception()
             logger.error("Exit from loop!")
 
 
@@ -128,7 +127,7 @@ def UpdateLoop():
 #                 if(answer):
 #                     bot.sendMessage(chat_id=chat_id, text=answer)
 #                 LAST_UPDATE_ID = update_id
-# 
+#
 #             if LAST_UPDATE_ID < update_id:  # If newer than the initial
 #                                             # LAST_UPDATE_ID
 #                 if text:
@@ -151,7 +150,7 @@ def ManageUpdates():
             if(answer):
                 bot.sendMessage(chat_id=chat_id, text=answer)
             LAST_UPDATE_ID = update_id
-    
+
         if LAST_UPDATE_ID < update_id:  # If newer than the initial
                                         # LAST_UPDATE_ID
             if text:

@@ -1,4 +1,5 @@
 TOKEN = ''
-HOST = ''
+ADDRESS = ''
+PORT = ''
 USERNAME = ''
 PASSWORD = ''
