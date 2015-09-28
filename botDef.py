@@ -30,8 +30,13 @@ def update():
 
 
 def readConfig():
-    
-    return address,port,username,password
+    # Per ora è molto semplice senza nessun controllo se il file esiste gia 
+    chat_id="chat_id"
+    parameter = []
+    f = open(chat_id, "r")
+    for line in f:
+        parameter.append(line)
+    return parameter
 
 
 def writeConfig():
