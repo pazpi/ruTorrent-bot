@@ -213,11 +213,11 @@ def addMagnet(torrent):
     requests.post(url, auth=HTTPBasicAuth(USERNAME, PASSWORD))
 
 
-def setKeyboard(*args):
-    for arg in args:
-        keyboard.append(arg)
-    reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
-    bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)
+# def setKeyboard(*args):
+#     for arg in args:
+#         keyboard.append(arg)
+#     reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
+#     bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)
 
 
 if __name__ == '__main__':
