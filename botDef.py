@@ -29,26 +29,27 @@ def update():
         update_id = update.update_id
 
 
+def readConfig():
+    return
+
+
+def writeConfig():
+    return
+
+
 def firstConfig(chat_id):
-    #parameter = [] # Array with address, port, username and password
-    sendMsg(startTxt)
-    sendMsg("Tell me the host address \n Es: http://myaddress.me")
-    update()
-    address = fetchLastMsg()
-    sendMsg("Tell me the host port \n Es: 8080")
-    port = fetchLastMsg()
-    sendMsg("Tell me the host username")
-    username = fetchLastMsg()
-    sendMsg("Tell me the host password")
-    password = fetchLastMsg()
+    bot.sendMessage(chat_id=chat_id, text=startTxt)
+    
+    bot.sendMessage(chat_id=chat_id, text="Tell me the host address \n Es: http://myaddress.me")
+    #update()
+    bot.sendMessage(chat_id=chat_id, text="Tell me the host port \n Es: 8080")
+
+    bot.sendMessage(chat_id=chat_id, text="Tell me the host username")
+
+    bot.sendMessage(chat_id=chat_id, text="Tell me the host password")
+
     rispCorrec = "Correct? \nAddress: " + address + "\nPort: "+ port + "\nUsername: "+ username + "\nPassword: "+ password
-    sendMsg(rispCorrec)
-    #to implement the database to save all datas. for now we can put info in the config.py file
-    # Non funziona, non salva le variabili su file
-    # config.ADDRESS = address
-    # config.PORT = port
-    # config.USERNAME = username
-    # config.PASSWORD = password
+    bot.sendMessage(chat_id=chat_id, text=rispCorrec)
 
 
 def setKeyboard(*args):
@@ -59,10 +60,10 @@ def setKeyboard(*args):
 
 
 def config(chat_id):
-    """keyboard_host_port = [[ "HOST", "PORT", "EXIT"]]
-    reply_markup = telegram.ReplyKeyboardMarkup(keyboard_host_port)
-    bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)"""
-    bot.setKeyboard("HOST", "PORT", "EXIT")
+    # keyboard_host_port = [[ "HOST", "PORT", "EXIT"]]
+    # reply_markup = telegram.ReplyKeyboardMarkup(keyboard_host_port)
+    # bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)
+    setKeyboard("HOST", "PORT", "EXIT")
     if (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "HOST"):
         setHost()
     elif (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "PORT"):
