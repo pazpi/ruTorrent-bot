@@ -29,7 +29,7 @@ def update():
         update_id = update.update_id
 
 
-def firstConfig(self):
+def firstConfig(chat_id):
     #parameter = [] # Array with address, port, username and password
     sendMsg(startTxt)
     sendMsg("Tell me the host address \n Es: http://myaddress.me")
@@ -50,14 +50,6 @@ def firstConfig(self):
     # config.USERNAME = username
     # config.PASSWORD = password
 
-def helpMessage(self):
-    self.sendMsg(helpTxt)
-
-def infoMessage(self):
-    self.sendMsg(infoTxt)
-
-def sendMsg(self, text):
-    self.bot.sendMessage(chat_id=self.chat_id, text=text)
 
 def setKeyboard(*args):
     for arg in args:
@@ -65,7 +57,8 @@ def setKeyboard(*args):
     reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
     self.bot.sendMessage(chat_id=self.chat_id, text="Choose wisely", reply_markup=reply_markup)
 
-def config_start(chat_id):
+
+def config(chat_id):
     """keyboard_host_port = [[ "HOST", "PORT", "EXIT"]]
     reply_markup = telegram.ReplyKeyboardMarkup(keyboard_host_port)
     bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)"""
