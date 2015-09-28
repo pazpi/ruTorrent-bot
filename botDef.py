@@ -9,7 +9,6 @@ helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands:
 
 
 #module_logger = logging.getLogger(__name__)
-
 bot = telegram.Bot(config.TOKEN)
 text = ''
 chat_id = '' # unique id for the chat user - for now the bot will be able to serve one person at a time
@@ -23,6 +22,9 @@ LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
 
 def update():
     updates = bot.getUpdates(offset=LAST_UPDATE_ID)
+    global text
+    global chat_id
+    global update_id
     for update in updates:
         text = update.message.text
         chat_id = update.message.chat.id
@@ -30,10 +32,9 @@ def update():
 
 
 def readConfig():
-    # Per ora è molto semplice senza nessun controllo se il file esiste gia 
-    chat_id="chat_id"
     parameter = []
-    f = open(chat_id, "r")
+    global chat_id
+    f = open(chat_id, "a")
     for line in f:
         parameter.append(line)
     return parameter
@@ -59,6 +60,7 @@ def firstConfig(chat_id):
 
 
 def setKeyboard(*args):
+    keyboard = []
     for arg in args:
         keyboard.append(arg)
     reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
