@@ -31,7 +31,7 @@ import telegram
 # file used to store sensible data, like API key
 import config
 import init
-import botclass
+import botDef
 import handleTorrent
 # xmlrpc module for rtorrent communication
 import xmlrpc.client
@@ -78,19 +78,8 @@ def SetLogger():
     logger.info('Log inizialized')
 
 def Init():
-    # Create bot object
-    global bot
-    bot = botclass.Bot()
-    #global bot
-    # Creation of bot object
-    #bot = telegram.Bot(token)
-    # Fetch last message number
-    #global LAST_UPDATE_ID
-    #LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
-    #LAST_UPDATE_ID = bot.LAST_UPDATE_ID
     # xmlrpc settings
     # server = xmlrpc.client.ServerProxy(HOST)
-    # Get the latest update
     logger.info("-- Init -- BOT creation")
     # Infinite Loop
     UpdateLoop()
@@ -136,28 +125,23 @@ def UpdateLoop():
 #                     bot.sendMessage(chat_id=chat_id, text="Torrent Addedd, Hurray! :D")
 #                     LAST_UPDATE_ID = update_id
 
-
 def ManageUpdates():
-    # global LAST_UPDATE_ID
-    #LAST_UPDATE_ID = bot.LAST_UPDATE_ID
-    # Fetch last message
-    bot.update()
+    botDef.update()
     answer = ''
-    init.config_start(chat_id)
-    # If newer than the initial
-    if bot.LAST_UPDATE_ID < bot.update_id:
-        if bot.command:
-            answer = GetCommand(bot.command)
-            if(answer):
-                bot.sendMessage(chat_id=chat_id, text=answer)
-            LAST_UPDATE_ID = update_id
-
-        if LAST_UPDATE_ID < update_id:  # If newer than the initial
-                                        # LAST_UPDATE_ID
-            if text:
-                rutorrent = magnet(text)
-                bot.sendMessage(chat_id=chat_id, text="Torrent Addedd, Hurray! :D")
-                LAST_UPDATE_ID = update_id
+    # # If newer than the initial
+    # if bot.LAST_UPDATE_ID < bot.update_id:
+    #     if bot.command:
+    #         answer = GetCommand(bot.command)
+    #         if(answer):
+    #             bot.sendMessage(chat_id=chat_id, text=answer)
+    #         LAST_UPDATE_ID = update_id
+    #
+    #     if LAST_UPDATE_ID < update_id:  # If newer than the initial
+    #                                     # LAST_UPDATE_ID
+    #         if text:
+    #             rutorrent = magnet(text)
+    #             bot.sendMessage(chat_id=chat_id, text="Torrent Addedd, Hurray! :D")
+    #             LAST_UPDATE_ID = update_id
 
 
 def GetCommand(msg):
@@ -198,14 +182,6 @@ def GetCommand(msg):
             answer = 'No command or magnet found'
             logger.debug('No command')
     return answer
-
-
-
-# def setKeyboard(*args):
-#     for arg in args:
-#         keyboard.append(arg)
-#     reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
-#     bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)
 
 
 if __name__ == '__main__':

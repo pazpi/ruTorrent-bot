@@ -13,7 +13,7 @@ helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands:
 bot = telegram.Bot(config.TOKEN)
 text = ''
 chat_id = '' # unique id for the chat user - for now the bot will be able to serve one person at a time
-update_id = '' 
+update_id = ''
 #LAST_UPDATE_ID = ''
 LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
 
@@ -64,3 +64,17 @@ def setKeyboard(*args):
         keyboard.append(arg)
     reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
     self.bot.sendMessage(chat_id=self.chat_id, text="Choose wisely", reply_markup=reply_markup)
+
+def config_start(chat_id):
+    """keyboard_host_port = [[ "HOST", "PORT", "EXIT"]]
+    reply_markup = telegram.ReplyKeyboardMarkup(keyboard_host_port)
+    bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)"""
+    bot.setKeyboard("HOST", "PORT", "EXIT")
+    if (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "HOST"):
+        setHost()
+    elif (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "PORT"):
+        setPort()
+    elif (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "EXIT"):
+        return
+    else:
+        return
