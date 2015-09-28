@@ -5,3 +5,4 @@ env/
 /rutorrent.log
 /__pycache__
 /__init__.py
+/chat_id_file/
