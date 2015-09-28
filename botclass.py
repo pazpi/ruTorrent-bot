@@ -46,6 +46,7 @@ class Bot:
         rispCorrec = "Correct? \nAddress: " + address + "\nPort: "+ port + "\nUsername: "+ username + "\nPassword: "+ password
         self.sendMsg(rispCorrec)
         #to implement the database to save all datas. for now we can put info in the config.py file
+        # Non funziona, non salva le variabili su file
         config.ADDRESS = address
         config.PORT = port
         config.USERNAME = username
@@ -59,3 +60,9 @@ class Bot:
 
     def sendMsg(self, text):
         self.bot.sendMessage(chat_id=self.chat_id, text=text)
+
+    def setKeyboard(*args):
+        for arg in args:
+            keyboard.append(arg)
+            reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
+            self.bot.sendMessage(chat_id=self.chat_id, text="Choose wisely", reply_markup=reply_markup)
