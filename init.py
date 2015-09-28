@@ -1,7 +1,7 @@
 # init.py
-#Init file
-#/start -> config bot -> host & port
-#- Custom keyboard
+# Init file
+# /start -> config bot -> host & port
+# - Custom keyboard
 
 import telegram
 import botclass
@@ -21,11 +21,11 @@ def config_start(chat_id):
         return
     else:
         return
-    
+
 def setHost():
-    
+
     return
-    
+
 def setPort():
-    
+
     return
