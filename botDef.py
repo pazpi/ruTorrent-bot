@@ -14,7 +14,6 @@ bot = telegram.Bot(config.TOKEN)
 text = ''
 chat_id = '' # unique id for the chat user - for now the bot will be able to serve one person at a time
 update_id = ''
-#LAST_UPDATE_ID = ''
 LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
 
 # def __init__(self):
@@ -31,18 +30,19 @@ def update():
 
 
 def firstConfig(self):
-    self.sendMsg(startTxt)
-    self.sendMsg("Tell me the host address \n Es: http://myaddress.me")
+    #parameter = [] # Array with address, port, username and password
+    sendMsg(startTxt)
+    sendMsg("Tell me the host address \n Es: http://myaddress.me")
     update()
     address = fetchLastMsg()
-    self.sendMsg("Tell me the host port \n Es: 8080")
+    sendMsg("Tell me the host port \n Es: 8080")
     port = fetchLastMsg()
-    self.sendMsg("Tell me the host username")
+    sendMsg("Tell me the host username")
     username = fetchLastMsg()
-    self.sendMsg("Tell me the host password")
+    sendMsg("Tell me the host password")
     password = fetchLastMsg()
     rispCorrec = "Correct? \nAddress: " + address + "\nPort: "+ port + "\nUsername: "+ username + "\nPassword: "+ password
-    self.sendMsg(rispCorrec)
+    sendMsg(rispCorrec)
     #to implement the database to save all datas. for now we can put info in the config.py file
     # Non funziona, non salva le variabili su file
     # config.ADDRESS = address
