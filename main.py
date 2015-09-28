@@ -27,10 +27,10 @@ from logging.handlers import RotatingFileHandler
 import requests
 from requests.auth import HTTPBasicAuth
 # telegram module for easy work with bot conf
-import telegram
+#import telegram
 # file used to store sensible data, like API key
 import config
-import init
+#import init
 import botDef
 import handleTorrent
 # xmlrpc module for rtorrent communication
@@ -55,10 +55,12 @@ commands = {
 'hash': '/hash'
 }
 
+
 def main(argv=None):
     SetLogger()
     if argv is None or len(argv) <= 1:
         Init()
+
 
 def SetLogger():
     global logger
@@ -74,8 +76,8 @@ def SetLogger():
     handler.setFormatter(formatter)
     # Add the handlers to the logger
     logger.addHandler(handler)
-
     logger.info('Log inizialized')
+
 
 def Init():
     # xmlrpc settings
@@ -84,6 +86,7 @@ def Init():
     # Infinite Loop
     UpdateLoop()
     return
+
 
 def UpdateLoop():
     while True:
@@ -118,30 +121,18 @@ def UpdateLoop():
 #                     bot.sendMessage(chat_id=chat_id, text=answer)
 #                 LAST_UPDATE_ID = update_id
 #
-#             if LAST_UPDATE_ID < update_id:  # If newer than the initial
-#                                             # LAST_UPDATE_ID
-#                 if text:
-#                     rutorrent = magnet(text)
-#                     bot.sendMessage(chat_id=chat_id, text="Torrent Addedd, Hurray! :D")
-#                     LAST_UPDATE_ID = update_id
+
 
 def ManageUpdates():
     botDef.update()
     answer = ''
-    # # If newer than the initial
-    # if bot.LAST_UPDATE_ID < bot.update_id:
-    #     if bot.command:
-    #         answer = GetCommand(bot.command)
-    #         if(answer):
-    #             bot.sendMessage(chat_id=chat_id, text=answer)
-    #         LAST_UPDATE_ID = update_id
-    #
-    #     if LAST_UPDATE_ID < update_id:  # If newer than the initial
-    #                                     # LAST_UPDATE_ID
-    #         if text:
-    #             rutorrent = magnet(text)
-    #             bot.sendMessage(chat_id=chat_id, text="Torrent Addedd, Hurray! :D")
-    #             LAST_UPDATE_ID = update_id
+    # If newer than the initial
+    if bot.LAST_UPDATE_ID < bot.update_id:
+        if bot.command:
+            answer = GetCommand(bot.command)
+            if(answer):
+                bot.sendMessage(chat_id=chat_id, text=answer)
+            LAST_UPDATE_ID = update_id
 
 
 def GetCommand(msg):
