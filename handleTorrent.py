@@ -1,5 +1,6 @@
 # handleTorrent
 # function to manipulate all the torrent part
+
 def Hash2Magnet(hash):
     magnet = ''
     megnet = "magnet:?xt=urn:btih:" + hash
