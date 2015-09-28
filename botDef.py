@@ -30,7 +30,8 @@ def update():
 
 
 def readConfig():
-    return
+    
+    return address,port,username,password
 
 
 def writeConfig():
