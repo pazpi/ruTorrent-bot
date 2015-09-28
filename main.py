@@ -127,12 +127,12 @@ def ManageUpdates():
     botDef.update()
     answer = ''
     # If newer than the initial
-    if bot.LAST_UPDATE_ID < bot.update_id:
-        if bot.command:
-            answer = GetCommand(bot.command)
+    if botDef.LAST_UPDATE_ID < botDef.update_id:
+        if botDef.text:
+            answer = GetCommand(botDef.text)
             if(answer):
-                bot.sendMessage(chat_id=chat_id, text=answer)
-            LAST_UPDATE_ID = update_id
+                bot.sendMessage(chat_id=botDef.chat_id, text=answer)
+        LAST_UPDATE_ID = update_id
 
 
 def GetCommand(msg):
@@ -142,35 +142,32 @@ def GetCommand(msg):
         command = str(command)
         par = msg.split()[1:]
         par = str(par)
-        if("/" in command):
+        if(command[0]=="/"):
             logger.debug('Command: ' + command)
         else:
             logger.debug('Message: ' + command)
+
         if(commands['help'] in command):
-            answer = helpTxt
+            answer = botDef.helpTxt
             logger.debug('Answer: helpTxt')
         elif(commands['info'] in command):
-            answer = infoTxt
+            answer = botDef.infoTxt
             logger.debug('Answer: infoTxt')
         elif(commands['start'] in command):
-            answer = startTxt
+            answer = botDef.startTxt
             logger.debug('Answer: startTxt')
+            botDef.firstConfig(botDef.chat_id) #prova
         elif(commands['hash'] in command):
-            addMagnet(Hash2Magnet(par))
+            handleTorrent.addMagnet(handleTorrent.Hash2Magnet(par))
             answer = "Hash added succesfully"
         elif(command[2:8] == 'magnet'):
-            addMagnet(command)
+            handleTorrent.addMagnet(command)
             answer = 'Magnet added succesfully!'
             logger.debug('Answer: Manget added')
-        elif(commands['host'] in command):
-            if(par == '[]'):
-                answer = config.HOST
-                logger.debug('Answer: Host replay')
-            else:
-                answer = 'Host set'
-                logger.debug('Answer: Host set')
+        elif(commands['config'] in command):
+            botDef.config(botDef.chat_id)
         else:
-            answer = 'No command or magnet found'
+            answer = 'No command or magnet found. Press /help for the list of the supported commands'
             logger.debug('No command')
     return answer
 
