@@ -91,7 +91,7 @@ def Init():
 def UpdateLoop():
     while True:
         try:
-            ManageUpdates()
+            manageUpdates()
             sleep(1)
         except Exception:
             # Error
@@ -99,43 +99,19 @@ def UpdateLoop():
             logger.error("Exit from loop!")
 
 
-# def ManageUpdates():
-#     # global LAST_UPDATE_ID
-#     LAST_UPDATE_ID = bot.LAST_UPDATE_ID
-#     # Fetch last message
-#     updates = bot.getUpdates(offset=LAST_UPDATE_ID)
-#     if(not updates):
-#         logger.error("Couldn't get updates")
-#         return
-#     for update in updates:
-#         command = update.message.text
-#         chat_id = update.message.chat.id
-#         update_id = update.update_id
-#         answer = ''
-#         init.config_start(chat_id)
-#         # If newer than the initial
-#         if LAST_UPDATE_ID < update_id:
-#             if command:
-#                 answer = GetCommand(command)
-#                 if(answer):
-#                     bot.sendMessage(chat_id=chat_id, text=answer)
-#                 LAST_UPDATE_ID = update_id
-#
-
-
-def ManageUpdates():
+def manageUpdates():
     botDef.update()
     answer = ''
     # If newer than the initial
     if botDef.LAST_UPDATE_ID < botDef.update_id:
          if botDef.text:
-            answer = GetCommand(botDef.text, botDef.chat_id)
+            answer = getCommand(botDef.text, botDef.chat_id)
             if(answer):
                 botDef.bot.sendMessage(chat_id=botDef.chat_id, text=answer)
             botDef.LAST_UPDATE_ID = botDef.update_id
 
 
-def GetCommand(msg,chat_id):
+def getCommand(msg,chat_id):
     answer = ''
     logger.debug("file is opening")
     name_file = "chat_id_file/" + str(chat_id)
