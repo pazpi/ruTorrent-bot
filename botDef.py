@@ -2,6 +2,7 @@
 #import logging
 import telegram
 import config
+from asyncio.log import logger
 
 startTxt = "Hi! I'm a bot developed by @pazpi and @martinotu to add torrent to your seedmachine \nAvailable commands: \n- /start \n- \n- /help \n- /magnet \n- /host"
 infoTxt = "Authors: @pazpi @martinotu \nGithub: https://github.com/pazpi/ruTorrent-bot \nBy using this bot you agree that your doing so at your own risk. Authors will not be responsible for any choices based on advices from this bot. And remember: keep seeding!"
@@ -53,10 +54,10 @@ def writeConfig(data,index):
 
 def firstConfig():
     global chat_id
-    bot.sendMessage(chat_id=chat_id, text=startTxt)
+    #bot.sendMessage(chat_id=chat_id, text=startTxt)
     # put 0 in the first line of the chat_id.txt file
     bot.sendMessage(chat_id=chat_id, text="Tell me the host address \n Es: http://myaddress.me")
-
+    #logger.debug("firstConfig")
     bot.sendMessage(chat_id=chat_id, text="Tell me the host port \n Es: 8080")
 
     bot.sendMessage(chat_id=chat_id, text="Tell me the host username. ")

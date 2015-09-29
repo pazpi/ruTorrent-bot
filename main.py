@@ -104,11 +104,11 @@ def manageUpdates():
     answer = ''
     # If newer than the initial
     if botDef.LAST_UPDATE_ID < botDef.update_id:
-         if botDef.text:
+        if botDef.text:
             answer = getCommand(botDef.text, botDef.chat_id)
             if(answer):
                 botDef.bot.sendMessage(chat_id=botDef.chat_id, text=answer)
-            botDef.LAST_UPDATE_ID = botDef.update_id
+        botDef.LAST_UPDATE_ID = botDef.update_id
 
 
 def getCommand(msg,chat_id):
@@ -145,7 +145,6 @@ def getCommand(msg,chat_id):
             logger.debug('Answer: Manget added')
         #elif(commands['config'] in command):
             #botDef.config()
-            #firstConfig()
         else:
             answer = 'No command or magnet found. Press /help for the list of the supported commands'
             logger.debug('No command')
