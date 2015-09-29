@@ -134,12 +134,12 @@ def getCommand(msg,chat_id):
         elif(commands['info'] in command):
             answer = botDef.infoTxt
             logger.debug('Answer: infoTxt')
-        # elif(commands['start'] in command):
-        #     answer = botDef.startTxt
-        #     logger.debug('Answer: startTxt')
-        #     botDef.firstConfig() #prova
+        elif(commands['start'] in command):
+            answer = botDef.startTxt
+            logger.debug('Answer: startTxt')
+            #botDef.firstConfig()
         elif(commands['hash'] in command):
-            handleTorrent.addMagnet(handleTorrent.Hash2Magnet(par))
+            #handleTorrent.addMagnet(handleTorrent.Hash2Magnet(par))
             answer = "Hash added succesfully"
         # elif(command[2:8] == 'magnet'):
         #     handleTorrent.addMagnet(command)
