@@ -92,7 +92,7 @@ def UpdateLoop():
     while True:
         try:
             manageUpdates()
-            sleep(1)
+            sleep(0.2)
         except Exception:
             # Error
             # logging.exception()
@@ -114,10 +114,8 @@ def manageUpdates():
 def getCommand(msg,chat_id):
     print("getCommand")
     answer = ''
-    logger.debug("file is opening")
     name_file = "chat_id_file/" + str(chat_id)
     f = open(name_file, "w+")
-    logger.debug("file creation")
     if(msg):
         command = msg.split()[:1]
         command = str(command)
@@ -125,30 +123,34 @@ def getCommand(msg,chat_id):
         par = str(par)
         if("/" in command):
             logger.debug('Command: ' + command)
+            print('Command: ' + command)
         else:
             logger.debug('Message: ' + command)
+            print('Message: ' + command)
+
         if(commands['help'] in command):
             answer = botDef.helpTxt
             logger.debug('Answer: helpTxt')
         elif(commands['info'] in command):
             answer = botDef.infoTxt
             logger.debug('Answer: infoTxt')
-        elif(commands['start'] in command):
-            answer = botDef.startTxt
-            logger.debug('Answer: startTxt')
-            botDef.firstConfig() #prova
+        # elif(commands['start'] in command):
+        #     answer = botDef.startTxt
+        #     logger.debug('Answer: startTxt')
+        #     botDef.firstConfig() #prova
         elif(commands['hash'] in command):
             handleTorrent.addMagnet(handleTorrent.Hash2Magnet(par))
             answer = "Hash added succesfully"
-        elif(command[2:8] == 'magnet'):
-            handleTorrent.addMagnet(command)
-            answer = 'Magnet added succesfully!'
-            logger.debug('Answer: Manget added')
-        #elif(commands['config'] in command):
-            #botDef.config()
+        # elif(command[2:8] == 'magnet'):
+        #     handleTorrent.addMagnet(command)
+        #     answer = 'Magnet added succesfully!'
+        #     logger.debug('Answer: Manget added')
+        # elif(commands['config'] in command):
+        #     botDef.config()
         else:
             answer = 'No command or magnet found. Press /help for the list of the supported commands'
             logger.debug('No command')
+
         return answer
 
 
