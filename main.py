@@ -112,6 +112,7 @@ def manageUpdates():
 
 
 def getCommand(msg,chat_id):
+    print("getCommand")
     answer = ''
     logger.debug("file is opening")
     name_file = "chat_id_file/" + str(chat_id)
