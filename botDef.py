@@ -9,6 +9,7 @@ helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands:
 
 
 #module_logger = logging.getLogger(__name__)
+
 bot = telegram.Bot(config.TOKEN)
 text = ''
 chat_id = '' # unique id for the chat user - for now the bot will be able to serve one person at a time
@@ -34,24 +35,31 @@ def update():
 def readConfig():
     parameter = []
     global chat_id
-    f = open(chat_id, "a")
+    f = open("chat_id_file/" + chat_id, "r")
     for line in f:
         parameter.append(line)
+    f.close()
     return parameter
 
 
-def writeConfig():
-    return
+def writeConfig(data,index):
+    global chat_id
+    parameter = readConfig()
+    f = open("chat_id_file/" + chat_id, "w")
+    paramete[index] = data + "\n"
+    f.write(parameter)
+    f.close()
 
 
-def firstConfig(chat_id):
+def firstConfig():
+    global chat_id
     bot.sendMessage(chat_id=chat_id, text=startTxt)
-    
+    # put 0 in the first line of the chat_id.txt file
     bot.sendMessage(chat_id=chat_id, text="Tell me the host address \n Es: http://myaddress.me")
-    #update()
+
     bot.sendMessage(chat_id=chat_id, text="Tell me the host port \n Es: 8080")
 
-    bot.sendMessage(chat_id=chat_id, text="Tell me the host username")
+    bot.sendMessage(chat_id=chat_id, text="Tell me the host username. ")
 
     bot.sendMessage(chat_id=chat_id, text="Tell me the host password")
 
@@ -59,24 +67,24 @@ def firstConfig(chat_id):
     bot.sendMessage(chat_id=chat_id, text=rispCorrec)
 
 
-def setKeyboard(*args):
-    keyboard = []
-    for arg in args:
-        keyboard.append(arg)
-    reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
-    self.bot.sendMessage(chat_id=self.chat_id, text="Choose wisely", reply_markup=reply_markup)
-
-
-def config(chat_id):
-    # keyboard_host_port = [[ "HOST", "PORT", "EXIT"]]
-    # reply_markup = telegram.ReplyKeyboardMarkup(keyboard_host_port)
-    # bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)
-    setKeyboard("HOST", "PORT", "EXIT")
-    if (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "HOST"):
-        setHost()
-    elif (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "PORT"):
-        setPort()
-    elif (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "EXIT"):
-        return
-    else:
-        return
+# def setKeyboard(*args):
+#     keyboard = []
+#     for arg in args:
+#         keyboard.append(arg)
+#     reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
+#     self.bot.sendMessage(chat_id=self.chat_id, text="Choose wisely", reply_markup=reply_markup)
+#
+#
+# def config(chat_id):
+#     # keyboard_host_port = [[ "HOST", "PORT", "EXIT"]]
+#     # reply_markup = telegram.ReplyKeyboardMarkup(keyboard_host_port)
+#     # bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)
+#     setKeyboard("HOST", "PORT", "EXIT")
+#     if (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "HOST"):
+#         setHost()
+#     elif (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "PORT"):
+#         setPort()
+#     elif (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "EXIT"):
+#         return
+#     else:
+#         return

@@ -137,6 +137,7 @@ def ManageUpdates():
 
 def GetCommand(msg):
     answer = ''
+    f = open("chat_id_file/" + chat_id, "w+")
     if(msg):
         command = msg.split()[:1]
         command = str(command)
@@ -166,6 +167,8 @@ def GetCommand(msg):
             logger.debug('Answer: Manget added')
         elif(commands['config'] in command):
             botDef.config(botDef.chat_id)
+        elif(f.readline()[:-1] == (1 or 2 or 3 or 4)) #to test
+            firstConfig()
         else:
             answer = 'No command or magnet found. Press /help for the list of the supported commands'
             logger.debug('No command')
