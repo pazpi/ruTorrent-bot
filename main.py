@@ -93,19 +93,20 @@ def UpdateLoop():
             # Error
             # logging.exception()
             logger.error("Exit from loop!")
+            print("Exit loop")
             return
 
 
 def manageUpdates():
-    #botDef.update()
+    botDef.update()
     answer = ''
     # If newer than the initial
-    #if botDef.LAST_UPDATE_ID < botDef.update_id:
-    #   if botDef.text:
-    #        #answer = getCommand(botDef.text, botDef.chat_id)
-    #        if(answer):
-    #            botDef.bot.sendMessage(chat_id=botDef.chat_id, text=answer)
-        #botDef.LAST_UPDATE_ID = botDef.update_id
+    if botDef.LAST_UPDATE_ID < botDef.update_id:
+        if botDef.text:
+            answer = getCommand(botDef.text, botDef.chat_id)
+            if(answer):
+                botDef.bot.sendMessage(chat_id=botDef.chat_id, text=answer)
+        botDef.LAST_UPDATE_ID = botDef.update_id
 
 
 def getCommand(msg,chat_id):
@@ -114,13 +115,14 @@ def getCommand(msg,chat_id):
     name_file = "chat_id_file/" + str(chat_id)
     f = open(name_file, "a+")
     #status = f.readline(0)
-    print("status=" + str(status))
+    #print("status=" + str(status))
     f.close()
     if(msg):
         command = msg.split()[:1]
         command = str(command)
         par = msg.split()[1:]
         par = str(par)
+        print(par)
         if("/" in command):
             logger.debug('Command: ' + command)
             print('Command: ' + command)
@@ -139,13 +141,14 @@ def getCommand(msg,chat_id):
             botDef.bot.sendMessage(chat_id=botDef.chat_id, text=botDef.startTxt)
             answer = botDef.firstConfig()
         elif(status==0):
-        #logger.debug('Answer: firstConfig')
-        #answer = botDef.firstConfig()
-            print("lol")    
+            #logger.debug('Answer: firstConfig')
+            #answer = botDef.firstConfig()
+            print("lol")
         elif(commands['hash'] in command):
             #print(par)
-            if par[1:-1]== "":
+            if par[1:-1] == "":
                 answer= "Put a hash after the /hash command!"
+                print("nopar")
             else:
                 handleTorrent.addMagnet(handleTorrent.Hash2Magnet(par))
                 answer = "Hash added succesfully"

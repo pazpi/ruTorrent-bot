@@ -25,8 +25,7 @@ def __init__(self):
 
 
 def update():
-    #===========================================================================
-    # updates = bot.getUpdates(offset=LAST_UPDATE_ID)
+    updates = bot.getUpdates(offset=LAST_UPDATE_ID)
     global text
     global chat_id
     global update_id
