@@ -1,4 +1,4 @@
-# handleTorrent
+# handleTorrent.py
 # function to manipulate all the torrent part
 
 import logging, coloredlogs
@@ -13,6 +13,7 @@ from requests.auth import HTTPBasicAuth
 import config
 #import init
 import botDef
+
 
 def Hash2Magnet(hash):
     magnet = ''
