@@ -20,25 +20,24 @@
 # DONE /hash to add a torrent based on his hash
 # add the option to have multiple session
 
-import logging, coloredlogs
-#import auxiliary_module
-from logging.handlers import RotatingFileHandler
+
 # requests module for basic http post
 import requests
 from requests.auth import HTTPBasicAuth
-# telegram module for easy work with bot conf
-#import telegram
 # file used to store sensible data, like API key
 import config
-#import init
 import botDef
 import handleTorrent
 # xmlrpc module for rtorrent communication
 import xmlrpc.client
 from time import sleep
+import logging
+import log
 
+log.SetLogger()
+#global logger
+logger = logging.getLogger(__name__)
 
-logger = {}
 last_update = 0
 lastMsgId = 0
 botName = 'ruTorrentPy'
@@ -53,26 +52,8 @@ commands = {
 
 
 def main(argv=None):
-    SetLogger()
     if argv is None or len(argv) <= 1:
         Init()
-
-
-def SetLogger():
-    global logger
-    logger = logging.getLogger(__name__)
-    # NOSET DEBUG INFO WARNING ERROR CRITICAL
-    logger.setLevel(logging.DEBUG)
-    # Create a file handler where log is located
-    handler = RotatingFileHandler('rutorrent.log', mode='a', maxBytes=5 * 1024 * 1024,
-                                  backupCount=5, encoding=None, delay=0)
-    handler.setLevel(logging.DEBUG)
-    # Create a logging format
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(funcName)s(%(lineno)d) %(message)s')
-    handler.setFormatter(formatter)
-    # Add the handlers to the logger
-    logger.addHandler(handler)
-    logger.info('Log inizialized')
 
 
 def Init():
@@ -91,13 +72,13 @@ def UpdateLoop():
             sleep(0.2)
         except Exception:
             # Error
-            # logging.exception()
-            logger.error("Exit from loop!")
+            logger.exception("Exit from loop!")
+            #logger.error("Exit from loop!")
             return
 
 
 def manageUpdates():
-    #botDef.update()
+    botDef.update()
     answer = ''
     # If newer than the initial
     #if botDef.LAST_UPDATE_ID < botDef.update_id:

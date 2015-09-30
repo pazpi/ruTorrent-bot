@@ -1,9 +1,14 @@
 # botDef.py
-import logging
+# telegram module for easy work with bot conf
 import telegram
 import config
-from asyncio.log import logger
-from symbol import parameters
+import logging
+#import log
+
+#logger = {}
+#log.SetLogger()
+#global logger
+logger = logging.getLogger(__name__)
 
 startTxt = "Hi! I'm a bot developed by @pazpi and @martinotu to add torrent to your seedmachine \nAvailable commands: \n- /help \n- /info \n- /hash"
 infoTxt = "Authors: @pazpi @martinotu \nGithub: https://github.com/pazpi/ruTorrent-bot \nBy using this bot you agree that your doing so at your own risk. Authors will not be responsible for any choices based on advices from this bot. And remember: keep seeding!"
@@ -25,8 +30,8 @@ def __init__(self):
 
 
 def update():
-    #===========================================================================
-    # updates = bot.getUpdates(offset=LAST_UPDATE_ID)
+    updates = bot.getUpdates(offset=LAST_UPDATE_ID)
+    logger.debug("update bot")
     global text
     global chat_id
     global update_id
