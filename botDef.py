@@ -16,6 +16,8 @@ chat_id = '' # unique id for the chat user - for now the bot will be able to ser
 update_id = ''
 LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
 
+chat_id_conf = {}
+#chat_id_conf[bot.]
 
 def __init__(self):
     logger = logging.getLogger("telegram_bot.Bot")
@@ -27,10 +29,12 @@ def update():
     global text
     global chat_id
     global update_id
+    global username
     for update in updates:
         text = update.message.text
         chat_id = update.message.chat.id
         update_id = update.update_id
+        username = update.username
 
 
 def readConfig():
