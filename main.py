@@ -121,15 +121,13 @@ def getCommand(msg,chat_id):
             logger.debug('Answer: startTxt')
             botDef.bot.sendMessage(chat_id=botDef.chat_id, text=botDef.startTxt)
             answer = botDef.firstConfig()
-        elif(status==0):
+        #elif(status==0):
             #logger.debug('Answer: firstConfig')
             #answer = botDef.firstConfig()
-            print("lol")
         elif(commands['hash'] in command):
-            #print(par)
-            if par[1:-1] == "":
+            print(par)
+            if par[1:-1]=="":
                 answer= "Put a hash after the /hash command!"
-                print("nopar")
             else:
                 handleTorrent.addMagnet(handleTorrent.Hash2Magnet(par))
                 answer = "Hash added succesfully"
