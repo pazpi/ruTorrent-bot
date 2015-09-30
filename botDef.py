@@ -65,14 +65,11 @@ def writeConfig(data,index):
 def firstConfig():
     global chat_id
     global text
-<<<<<<< HEAD
     global username
     # Add username to chat_id config dictionare, add user to still config list
     if username not in chat_id_conf:
         chat_id_conf[username] = chat_id
-=======
     answer="ciao"
->>>>>>> 8b06f9d67c6fc1af93916f35e62a9f670ff404a7
     parameter = readConfig()
     if not(parameter):
         answer = "Tell me the host address \n Es: http://myaddress.me"
@@ -81,7 +78,7 @@ def firstConfig():
         if parameter[0]=="0":
             if not text[:7] == ("http://" or "https:/"):
                   answer = "Address not correct, please follow the example. http://myaddress.me"
-            
+
             writeConfig(text, 1)
             writeConfig("1", 0)
             answer = "Tell me the host port \n Es: 8080"
