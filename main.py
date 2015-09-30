@@ -42,10 +42,6 @@ logger = {}
 last_update = 0
 lastMsgId = 0
 botName = 'ruTorrentPy'
-# token = config.TOKEN
-# ADDRESS = config.ADDRESS
-# USERNAME = config.USERNAME
-# PASSWORD = config.PASSWORD
 
 commands = {
 'start': '/start',
@@ -115,7 +111,8 @@ def getCommand(msg,chat_id):
     print("getCommand")
     answer = ''
     name_file = "chat_id_file/" + str(chat_id)
-    f = open(name_file, "w+")
+    f = open(name_file, "a+")
+    f.close()
     if(msg):
         command = msg.split()[:1]
         command = str(command)
@@ -135,20 +132,24 @@ def getCommand(msg,chat_id):
             answer = botDef.infoTxt
             logger.debug('Answer: infoTxt')
         elif(commands['start'] in command):
-            answer = botDef.startTxt
             logger.debug('Answer: startTxt')
-            #botDef.firstConfig()
+            botDef.bot.sendMessage(chat_id=botDef.chat_id, text=botDef.startTxt)
+            answer = botDef.firstConfig()
         elif(commands['hash'] in command):
-            #print(par)
-            handleTorrent.addMagnet(handleTorrent.Hash2Magnet(par))
-            answer = "Hash added succesfully"
+            print(par)
+            if par[1:-1]== "":
+                answer= "Put a hash after the /hash command!"
+            else:
+                handleTorrent.addMagnet(handleTorrent.Hash2Magnet(par))
+                answer = "Hash added succesfully"
         elif(command[2:8] == 'magnet'):
             magnet = command[2:-2]
             handleTorrent.addMagnet(magnet)
             answer = 'Magnet added succesfully!'
             logger.debug('Answer: Manget added')
-        # elif(commands['config'] in command):
-        #     botDef.config()
+        elif(commands['config'] in command):
+            print("config")
+            #botDef.config()
         else:
             answer = 'No command or magnet found. Press /help for the list of the supported commands'
             logger.debug('No command')
