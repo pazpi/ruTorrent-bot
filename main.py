@@ -112,6 +112,8 @@ def getCommand(msg,chat_id):
     answer = ''
     name_file = "chat_id_file/" + str(chat_id)
     f = open(name_file, "a+")
+    #status = f.readline(0)
+    print("status=" + str(status))
     f.close()
     if(msg):
         command = msg.split()[:1]
@@ -135,8 +137,12 @@ def getCommand(msg,chat_id):
             logger.debug('Answer: startTxt')
             botDef.bot.sendMessage(chat_id=botDef.chat_id, text=botDef.startTxt)
             answer = botDef.firstConfig()
+        elif(status==0):
+        #logger.debug('Answer: firstConfig')
+        #answer = botDef.firstConfig()
+            print("lol")    
         elif(commands['hash'] in command):
-            print(par)
+            #print(par)
             if par[1:-1]== "":
                 answer= "Put a hash after the /hash command!"
             else:
@@ -153,7 +159,6 @@ def getCommand(msg,chat_id):
         else:
             answer = 'No command or magnet found. Press /help for the list of the supported commands'
             logger.debug('No command')
-
         return answer
 
 
