@@ -93,18 +93,19 @@ def UpdateLoop():
             # Error
             # logging.exception()
             logger.error("Exit from loop!")
+            return
 
 
 def manageUpdates():
-    botDef.update()
+    #botDef.update()
     answer = ''
     # If newer than the initial
-    if botDef.LAST_UPDATE_ID < botDef.update_id:
-        if botDef.text:
-            answer = getCommand(botDef.text, botDef.chat_id)
-            if(answer):
-                botDef.bot.sendMessage(chat_id=botDef.chat_id, text=answer)
-        botDef.LAST_UPDATE_ID = botDef.update_id
+    #if botDef.LAST_UPDATE_ID < botDef.update_id:
+    #   if botDef.text:
+    #        #answer = getCommand(botDef.text, botDef.chat_id)
+    #        if(answer):
+    #            botDef.bot.sendMessage(chat_id=botDef.chat_id, text=answer)
+        #botDef.LAST_UPDATE_ID = botDef.update_id
 
 
 def getCommand(msg,chat_id):
@@ -126,7 +127,7 @@ def getCommand(msg,chat_id):
         else:
             logger.debug('Message: ' + command)
             print('Message: ' + command)
-
+ 
         if(commands['help'] in command):
             answer = botDef.helpTxt
             logger.debug('Answer: helpTxt')
