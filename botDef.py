@@ -52,11 +52,11 @@ def writeConfig(data,index):
     global chat_id
     parameter = []
     parameter = readConfig()
-    print(parameter)
+    print("parameter befor writing" + str(parameter))
     name_file = "chat_id_file/" + str(chat_id)
     f = open(name_file, "w")
     parameter.insert(index, data + "\n")
-    print(parameter)
+    print("parameter after writing" + str(parameter))
     for index1 in parameter:
         f.write(index1)
     f.close()
@@ -65,6 +65,7 @@ def writeConfig(data,index):
 def firstConfig():
     global chat_id
     global text
+    answer="ciao"
     parameter = readConfig()
     if not(parameter):
         answer = "Tell me the host address \n Es: http://myaddress.me"
@@ -75,14 +76,17 @@ def firstConfig():
             writeConfig("1", 0)
             answer = "Tell me the host port \n Es: 8080"
         if parameter[0]=="1":
-            writeConfig(text, 1)
-            writeConfig("1", 0)
+            writeConfig(text, 2)
+            writeConfig("2", 0)
             answer = "Tell me the host username. "
         if parameter[0]=="2":
-            writeConfig(text, 1)
-            writeConfig("1", 0)
+            writeConfig(text, 3)
+            writeConfig("3", 0)
             answer = "Tell me the host password"
-    #answer = "Correct? \nAddress: " + address + "\nPort: "+ port + "\nUsername: "+ username + "\nPassword: "+ password
+        if parameter[0]=="3":
+            writeConfig(text, 4)
+            writeConfig("4", 0)
+            answer = "Correct? \nAddress: " + address + "\nPort: "+ port + "\nUsername: "+ username + "\nPassword: "+ password
     return answer
 
 
