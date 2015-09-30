@@ -2,9 +2,6 @@ env/
 /.project
 /.pydevproject
 /app.log
-<<<<<<< HEAD
 /rutorrent.log
 /__pycache__
-=======
 /config.py
->>>>>>> stash
