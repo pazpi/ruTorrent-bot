@@ -14,10 +14,10 @@ bot = telegram.Bot(config.TOKEN)
 text = ''
 chat_id = '' # unique id for the chat user - for now the bot will be able to serve one person at a time
 update_id = ''
+username = ''
 LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
 
 chat_id_conf = {}
-#chat_id_conf[bot.]
 
 def __init__(self):
     logger = logging.getLogger("telegram_bot.Bot")
@@ -65,12 +65,19 @@ def writeConfig(data,index):
 def firstConfig():
     global chat_id
     global text
+    global username
+    # Add username to chat_id config dictionare, add user to still config list
+    if username not in chat_id_conf:
+        chat_id_conf[username] = chat_id
     parameter = readConfig()
     if not(parameter):
         answer = "Tell me the host address \n Es: http://myaddress.me"
         writeConfig("0", 0)
     else:
         if parameter[0]=="0":
+            if not text[:7] == ("http://" or "https:/"):
+                  answer = "Address not correct, please follow the example. http://myaddress.me"
+            
             writeConfig(text, 1)
             writeConfig("1", 0)
             answer = "Tell me the host port \n Es: 8080"
