@@ -17,7 +17,7 @@ update_id = ''
 username = ''
 LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
 
-chat_id_conf = {}
+chat_id_config = []
 
 def __init__(self):
     logger = logging.getLogger("telegram_bot.Bot")
@@ -34,16 +34,19 @@ def update():
         text = update.message.text
         chat_id = update.message.chat.id
         update_id = update.update_id
-        #username = update.username
+        # username = update.username no attribute username in update
 
 
 def readConfig():
-    parameter = []
+    parameter = ["","","","",""]
     global chat_id
     name_file = "chat_id_file/" + str(chat_id)
+    # doesn't create the file
     f = open(name_file, "r")
-    for line in f:
-        parameter.append(line[:-1])
+    for i in range(4):
+        parameter[i]=f.readline()
+        # print(parameter[i])
+        # parameter.append(line[:-1])
     f.close()
     return parameter
 
@@ -52,48 +55,54 @@ def writeConfig(data,index):
     global chat_id
     parameter = []
     parameter = readConfig()
-    print("parameter befor writing" + str(parameter))
+    print("parameter befor writing: ")
+    print(parameter)
     name_file = "chat_id_file/" + str(chat_id)
-    f = open(name_file, "w")
-    parameter.insert(index, data + "\n")
-    print("parameter after writing" + str(parameter))
-    for index1 in parameter:
-        f.write(index1)
+    f = open(name_file, "w+")
+    # parameter.insert(index, data + "\n")
+    parameter[index] = data 
+    print("parameter after writing")
+    print(parameter)
+    for index1 in range(4):
+        f.write(parameter[index1] + "\n")
     f.close()
 
 
 def firstConfig():
     global chat_id
     global text
-    global username
+    # global username
     # Add username to chat_id config dictionare, add user to still config list
-    if username not in chat_id_conf:
-        chat_id_conf[username] = chat_id
-    answer="ciao"
-    parameter = readConfig()
-    if not(parameter):
+    if chat_id not in chat_id_config:
+        chat_id_config.append(chat_id)
         answer = "Tell me the host address \n Es: http://myaddress.me"
         writeConfig("0", 0)
     else:
-        if parameter[0]=="0":
+        parameter =[]
+        parameter = readConfig()
+        print("par=" + str(parameter))
+        print ("par 0 = " + parameter[0])
+        if parameter[0] == "0":
             if not text[:7] == ("http://" or "https:/"):
-                  answer = "Address not correct, please follow the example. http://myaddress.me"
-
-            writeConfig(text, 1)
-            writeConfig("1", 0)
-            answer = "Tell me the host port \n Es: 8080"
-        if parameter[0]=="1":
+                answer = "Address not correct, please follow the example.\nEs: http://myaddress.me"
+            else:
+                writeConfig("1", 0)
+            #    writeConfig(text, 1)
+                answer = "Tell me the host port \n Es: 8080"
+        elif parameter[0]=="1":
             writeConfig(text, 2)
             writeConfig("2", 0)
-            answer = "Tell me the host username. "
-        if parameter[0]=="2":
+            answer = "Tell me the host username."
+        elif parameter[0]=="2":
             writeConfig(text, 3)
             writeConfig("3", 0)
             answer = "Tell me the host password"
-        if parameter[0]=="3":
+        elif parameter[0]=="3":
             writeConfig(text, 4)
             writeConfig("4", 0)
             answer = "Correct? \nAddress: " + address + "\nPort: "+ port + "\nUsername: "+ username + "\nPassword: "+ password
+        else:
+            answer = "errore"
     return answer
 
 

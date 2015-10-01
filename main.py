@@ -91,19 +91,17 @@ def manageUpdates():
 
 
 def getCommand(msg,chat_id):
-    print("getCommand")
+    # print("getCommand")
     answer = ''
-    name_file = "chat_id_file/" + str(chat_id)
-    f = open(name_file, "a+")
-    #status = f.readline(0)
-    #print("status=" + str(status))
-    f.close()
+    # print("ciao " + f.readline())
+    # print("status=" + status)
+    # print(parameter)
     if(msg):
         command = msg.split()[:1]
         command = str(command)
         par = msg.split()[1:]
         par = str(par)
-        print(par)
+        #print(par)
         if("/" in command):
             logger.debug('Command: ' + command)
             print('Command: ' + command)
@@ -121,9 +119,10 @@ def getCommand(msg,chat_id):
             logger.debug('Answer: startTxt')
             botDef.bot.sendMessage(chat_id=botDef.chat_id, text=botDef.startTxt)
             answer = botDef.firstConfig()
-        #elif(status==0):
-            #logger.debug('Answer: firstConfig')
-            #answer = botDef.firstConfig()
+        elif chat_id in botDef.chat_id_config:
+            answer = botDef.firstConfig()
+            logger.debug('Answer: firstConfig')
+            print(botDef.chat_id_config)
         elif(commands['hash'] in command):
             print(par)
             if par[1:-1]=="":
