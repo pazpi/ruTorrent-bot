@@ -112,11 +112,20 @@ def firstConfig():
             answer = ""
             parameter = readConfig() # rileggo il file altrimenti il campo password rimane quello prima del settaggio
             msg = "Correct? \nAddress: " + parameter[1] + "\nPort: "+ parameter[2] + "\nUsername: "+ parameter[3] + "\nPassword: "+ parameter[4]
-            setKeyboard(["YES","NO"], message=msg, chat_id=chat_id, hide=False, exit=True)
+            setKeyboard(["YES","NO"], message=msg, chat_id=chat_id, hide=False, exit=False)
         elif parameter[0]=="4":
-            
-            
-        #else:
+            if text=="YES":
+                msg = "All set, have fun and keep seedind!"
+                setKeyboard(message=msg, chat_id=chat_id, hide=True)
+            elif text=="NO":
+                msg = "Write /config to change settings"
+                setKeyboard(message=msg, chat_id=chat_id, hide=True)            
+            else:
+                msg = "In order to change settings type /config"
+                setKeyboard(message=msg, chat_id=chat_id, hide=True)            
+            chat_id_f_config.remove(chat_id)
+            answer = ""
+        else:
             answer = "errore"
     return answer
 
