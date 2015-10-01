@@ -18,10 +18,15 @@ username = ''
 LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
 
 chat_id_f_config = []
+chat_id_config = []
+chat_id_host_config = []
+chat_id_port_config = []
+chat_id_user_config = []
+chat_id_passwd_config = []
 
-def __init__(self):
-    logger = logging.getLogger("telegram_bot.Bot")
-    logger.info("Bot creation")
+# def __init__(self):
+#     logger = logging.getLogger("telegram_bot.Bot")
+#     logger.info("Bot creation")
 
 
 def update():
@@ -145,17 +150,52 @@ def setKeyboard(*args, chat_id=chat_id, message="Prova", exit=True, hide=False):
         reply_markup = telegram.ReplyKeyboardHide()
     bot.sendMessage(chat_id=chat_id, text=message, reply_markup=reply_markup)
 
-
-# def config(chat_id):
-#     # keyboard_host_port = [[ "HOST", "PORT", "EXIT"]]
-#     # reply_markup = telegram.ReplyKeyboardMarkup(keyboard_host_port)
-#     # bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)
-#     setKeyboard("HOST", "PORT", "EXIT")
-#     if (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "HOST"):
-#         setHost()
-#     elif (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "PORT"):
-#         setPort()
-#     elif (bot.getUpdates(offset=LAST_UPDATE_ID).message.text == "EXIT"):
-#         return
+# Tutta da rivedere, bisogna mettere il numero di chat_id dentro il rispettivo array
+# def config():
+#     global chat_id
+#     global text
+#     if chat_id not in chat_id_config:
+#         chat_id_config.append(chat_id)
+#         msg = "Which parameter you want to change?"
+#         setKeyboard(["Host", "Port"], ["Username","Password"], message=msg, chat_id=chat_id, hide=False, exit=True)
+#     if text == "Host":
+#         if chat_id not in chat_id_config:
+#             chat_id_host_config.append(chat_id)
+#     elif text == "Port":
+#         if chat_id not in chat_id_config:
+#             chat_id_port_config.append(chat_id)
+#     elif text == "Username":
+#         if chat_id not in chat_id_config:
+#             chat_id_user_config.append(chat_id)
+#     elif text == "Password":
+#         if chat_id not in chat_id_config:
+#             chat_id_passwd_config.append(chat_id)
+#     elif text == "Exit":
+#         return ""
 #     else:
-#         return
+#         return ""
+#     
+# 
+# def setHost():
+#     msg = "Write your host"
+#     setKeyboard(message=msg, chat_id=chat_id, hide=True)
+#     
+#     return ""
+# 
+# 
+# def setPort():
+#     msg = "Write your port"
+#     setKeyboard(message=msg, chat_id=chat_id, hide=True)
+#     return ""
+# 
+# 
+# def setUsername():
+#     msg = "Write your username.\nWrite NULL to leave it blank"
+#     setKeyboard(message=msg, chat_id=chat_id, hide=True)
+#     return ""
+# 
+# 
+# def setPassword():
+#     msg = "Write your password.\nWrite NULL to leave it blank"
+#     setKeyboard(message=msg, chat_id=chat_id, hide=True)
+#     return ""
