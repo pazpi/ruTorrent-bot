@@ -20,7 +20,6 @@
 # DONE /hash to add a torrent based on his hash
 # add the option to have multiple session
 
-
 # requests module for basic http post
 import requests
 from requests.auth import HTTPBasicAuth
@@ -53,19 +52,19 @@ commands = {
 
 def main(argv=None):
     if argv is None or len(argv) <= 1:
-        Init()
+        init()
 
 
-def Init():
+def init():
     # xmlrpc settings
     # server = xmlrpc.client.ServerProxy(HOST)
-    logger.info("-- Init -- BOT creation")
+    logger.info("-- init -- BOT creation")
     # Infinite Loop
-    UpdateLoop()
+    updateLoop()
     return
 
 
-def UpdateLoop():
+def updateLoop():
     while True:
         try:
             manageUpdates()
@@ -104,14 +103,12 @@ def getCommand(msg,chat_id):
         command = str(command)
         par = msg.split()[1:]
         par = str(par)
-        #print(par)
         if("/" in command):
             logger.debug('Command: ' + command)
             print('Command: ' + command)
         else:
             logger.debug('Message: ' + command)
             print('Message: ' + command)
- 
         if(commands['help'] in command):
             answer = botDef.helpTxt
             logger.debug('Answer: helpTxt')
@@ -119,14 +116,30 @@ def getCommand(msg,chat_id):
             answer = botDef.infoTxt
             logger.debug('Answer: infoTxt')
         elif(commands['start'] in command):
-            logger.debug('Answer: startTxt')
+            logger.debug('Call: fistConfig')
             botDef.bot.sendMessage(chat_id=botDef.chat_id, text=botDef.startTxt)
             answer = botDef.firstConfig()
         elif chat_id in botDef.chat_id_f_config:
             answer = botDef.firstConfig()
             logger.debug('Answer: firstConfig')
-            print("\n entro nella first config perchè persona nell'array")
-            print(botDef.chat_id_f_config)
+        elif(commands['config'] in command):
+            logger.debug('Call: config')
+            answer = botDef.config()
+#         elif chat_id in botDef.chat_id_host_config:
+#             answer = botDef.setHost()
+#             logger.debug('Call: setHost')
+#         elif chat_id in botDef.chat_port__config:
+#             answer = botDef.setPort()
+#             logger.debug('Call: setPort')
+#         elif chat_id in botDef.chat_id_user_config:
+#             answer = botDef.setUser()
+#             logger.debug('Call: serUsername')
+#         elif chat_id in botDef.chat_id_passwd_config:
+#             answer = botDef.setPassword()()
+#             logger.debug('Call: setPassword')
+        
+            #print("\n entro nella first config perchè persona nell'array")
+            #print(botDef.chat_id_f_config)
         elif(commands['hash'] in command):
             print(par)
             if par[1:-1]=="":
