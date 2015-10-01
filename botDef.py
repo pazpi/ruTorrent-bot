@@ -38,13 +38,13 @@ def update():
 
 
 def readConfig():
-    parameter = ["","","","",""]
+    parameter = ["","","","","",""]
     global chat_id
     name_file = "chat_id_file/" + str(chat_id)
     # doesn't create the file
     f = open(name_file, "r")
-    for i in range(4):
-        parameter[i]=f.readline()
+    for i in range(6):
+        parameter[i]=f.readline()[:-1]
         # print(parameter[i])
         # parameter.append(line[:-1])
     f.close()
@@ -58,13 +58,15 @@ def writeConfig(data,index):
     print("parameter befor writing: ")
     print(parameter)
     name_file = "chat_id_file/" + str(chat_id)
-    f = open(name_file, "w+")
-    # parameter.insert(index, data + "\n")
-    parameter[index] = data 
+    f = open(name_file, "w")
+    parameter.pop(index)
+    parameter.insert(index, data)
     print("parameter after writing")
     print(parameter)
-    for index1 in range(4):
-        f.write(parameter[index1] + "\n")
+    f.close()
+    name_file = "chat_id_file/" + str(chat_id)
+    f = open(name_file, "w")
+    f.write('\n'.join(str(line) for line in parameter))
     f.close()
 
 
@@ -83,11 +85,11 @@ def firstConfig():
         print("par=" + str(parameter))
         print ("par 0 = " + parameter[0])
         if parameter[0] == "0":
-            if not text[:7] == ("http://" or "https:/"):
+            if not text[:7] == ("http://" or "https:/"): 
                 answer = "Address not correct, please follow the example.\nEs: http://myaddress.me"
             else:
                 writeConfig("1", 0)
-            #    writeConfig(text, 1)
+                writeConfig(text, 1)
                 answer = "Tell me the host port \n Es: 8080"
         elif parameter[0]=="1":
             writeConfig(text, 2)
@@ -100,7 +102,8 @@ def firstConfig():
         elif parameter[0]=="3":
             writeConfig(text, 4)
             writeConfig("4", 0)
-            answer = "Correct? \nAddress: " + address + "\nPort: "+ port + "\nUsername: "+ username + "\nPassword: "+ password
+            answer = "Correct? \nAddress: " + parameter[1] + "\nPort: "+ parameter[2] + "\nUsername: "+ parameter[3] + "\nPassword: "+ parameter[4]
+            
         else:
             answer = "errore"
     return answer

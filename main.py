@@ -96,6 +96,9 @@ def getCommand(msg,chat_id):
     # print("ciao " + f.readline())
     # print("status=" + status)
     # print(parameter)
+    name_file = "chat_id_file/" + str(chat_id)
+    f = open(name_file, "a+")
+    f.close()
     if(msg):
         command = msg.split()[:1]
         command = str(command)
@@ -122,6 +125,7 @@ def getCommand(msg,chat_id):
         elif chat_id in botDef.chat_id_config:
             answer = botDef.firstConfig()
             logger.debug('Answer: firstConfig')
+            print("\n entro nella first config perchè persona nell'array")
             print(botDef.chat_id_config)
         elif(commands['hash'] in command):
             print(par)
