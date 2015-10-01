@@ -102,19 +102,24 @@ def firstConfig():
         elif parameter[0]=="3":
             writeConfig(text, 4)
             writeConfig("4", 0)
-            answer = "Correct? \nAddress: " + parameter[1] + "\nPort: "+ parameter[2] + "\nUsername: "+ parameter[3] + "\nPassword: "+ parameter[4]
+            answer = ""
+            #answer = "Correct? \nAddress: " + parameter[1] + "\nPort: "+ parameter[2] + "\nUsername: "+ parameter[3] + "\nPassword: "+ parameter[4]
+            setKeyboard("YES","NO")
+        elif parameter[0]=="4":
             
-        else:
+            
+        #else:
             answer = "errore"
     return answer
 
 
-# def setKeyboard(*args):
-#     keyboard = []
-#     for arg in args:
-#         keyboard.append(arg)
-#     reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
-#     self.bot.sendMessage(chat_id=self.chat_id, text="Choose wisely", reply_markup=reply_markup)
+def setKeyboard(*args):
+    keyboard = []
+    for arg in args:
+        keyboard.append(arg)
+    print(keyboard)
+    reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
+    bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)
 
 
 # def config(chat_id):
