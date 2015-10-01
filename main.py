@@ -32,9 +32,9 @@ import handleTorrent
 import xmlrpc.client
 from time import sleep
 import logging
-import log
+#import log
 
-log.SetLogger()
+# log.SetLogger()
 #global logger
 logger = logging.getLogger(__name__)
 
@@ -122,11 +122,11 @@ def getCommand(msg,chat_id):
             logger.debug('Answer: startTxt')
             botDef.bot.sendMessage(chat_id=botDef.chat_id, text=botDef.startTxt)
             answer = botDef.firstConfig()
-        elif chat_id in botDef.chat_id_config:
+        elif chat_id in botDef.chat_id_f_config:
             answer = botDef.firstConfig()
             logger.debug('Answer: firstConfig')
             print("\n entro nella first config perchè persona nell'array")
-            print(botDef.chat_id_config)
+            print(botDef.chat_id_f_config)
         elif(commands['hash'] in command):
             print(par)
             if par[1:-1]=="":
