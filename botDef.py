@@ -55,14 +55,14 @@ def writeConfig(data,index):
     global chat_id
     parameter = []
     parameter = readConfig()
-    print("parameter befor writing: ")
-    print(parameter)
+    #print("parameter befor writing: ")
+    #print(parameter)
     name_file = "chat_id_file/" + str(chat_id)
     f = open(name_file, "w")
     parameter.pop(index)
     parameter.insert(index, data)
-    print("parameter after writing")
-    print(parameter)
+    #print("parameter after writing")
+    #print(parameter)
     f.close()
     name_file = "chat_id_file/" + str(chat_id)
     f = open(name_file, "w")
@@ -82,19 +82,26 @@ def firstConfig():
     else:
         parameter =[]
         parameter = readConfig()
-        print("par=" + str(parameter))
-        print ("par 0 = " + parameter[0])
+        #print("par=" + str(parameter))
+        #print ("par 0 = " + parameter[0])
         if parameter[0] == "0":
             if not text[:7] == ("http://" or "https:/"): 
                 answer = "Address not correct, please follow the example.\nEs: http://myaddress.me"
             else:
+                answer = "Tell me the host port \n Es: 8080"
                 writeConfig("1", 0)
                 writeConfig(text, 1)
-                answer = "Tell me the host port \n Es: 8080"
         elif parameter[0]=="1":
-            writeConfig(text, 2)
-            writeConfig("2", 0)
-            answer = "Tell me the host username."
+            if text.isdigit():
+                text = int(text)
+                if text <= 65536 and text > 0:
+                    writeConfig(text, 2)
+                    writeConfig("2", 0)
+                    answer = "Tell me the host username."
+                else:
+                    answer = "Out of range.\nMust be between 1 and 65536"
+            else:
+                answer = "Port not valid.\nEs: 8080"
         elif parameter[0]=="2":
             writeConfig(text, 3)
             writeConfig("3", 0)
@@ -103,8 +110,9 @@ def firstConfig():
             writeConfig(text, 4)
             writeConfig("4", 0)
             answer = ""
-            #answer = "Correct? \nAddress: " + parameter[1] + "\nPort: "+ parameter[2] + "\nUsername: "+ parameter[3] + "\nPassword: "+ parameter[4]
-            setKeyboard(["YES"],["NO"])
+            parameter = readConfig() # rileggo il file altrimenti il campo password rimane quello prima del settaggio
+            msg = "Correct? \nAddress: " + parameter[1] + "\nPort: "+ parameter[2] + "\nUsername: "+ parameter[3] + "\nPassword: "+ parameter[4]
+            setKeyboard(["YES","NO"], message=msg, chat_id=chat_id, hide=False, exit=True)
         elif parameter[0]=="4":
             
             
@@ -113,7 +121,7 @@ def firstConfig():
     return answer
 
 
-def setKeyboard(*args, chat_id=chat_id, message="", exit=True, hide=False):
+def setKeyboard(*args, chat_id=chat_id, message="Prova", exit=True, hide=False):
     # *arg must be an array
     if not hide:
         keyboard = []
@@ -122,8 +130,8 @@ def setKeyboard(*args, chat_id=chat_id, message="", exit=True, hide=False):
         if exit:
             keyboard.append(["Exit"])
         print(keyboard)
+        print(message)
         reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
-        bot.sendMessage(chat_id=chat_id, text=message, reply_markup=reply_markup)
     else:
         reply_markup = telegram.ReplyKeyboardHide()
     bot.sendMessage(chat_id=chat_id, text=message, reply_markup=reply_markup)
