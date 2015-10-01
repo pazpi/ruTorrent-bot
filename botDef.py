@@ -17,7 +17,7 @@ update_id = ''
 username = ''
 LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
 
-chat_id_config = []
+chat_id_f_config = []
 
 def __init__(self):
     logger = logging.getLogger("telegram_bot.Bot")
@@ -75,8 +75,8 @@ def firstConfig():
     global text
     # global username
     # Add username to chat_id config dictionare, add user to still config list
-    if chat_id not in chat_id_config:
-        chat_id_config.append(chat_id)
+    if chat_id not in chat_id_f_config:
+        chat_id_f_config.append(chat_id)
         answer = "Tell me the host address \n Es: http://myaddress.me"
         writeConfig("0", 0)
     else:
@@ -104,7 +104,7 @@ def firstConfig():
             writeConfig("4", 0)
             answer = ""
             #answer = "Correct? \nAddress: " + parameter[1] + "\nPort: "+ parameter[2] + "\nUsername: "+ parameter[3] + "\nPassword: "+ parameter[4]
-            setKeyboard("YES","NO")
+            setKeyboard(["YES"],["NO"])
         elif parameter[0]=="4":
             
             
@@ -113,13 +113,20 @@ def firstConfig():
     return answer
 
 
-def setKeyboard(*args):
-    keyboard = []
-    for arg in args:
-        keyboard.append(arg)
-    print(keyboard)
-    reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
-    bot.sendMessage(chat_id=chat_id, text="Choose wisely", reply_markup=reply_markup)
+def setKeyboard(*args, chat_id=chat_id, message="", exit=True, hide=False):
+    # *arg must be an array
+    if not hide:
+        keyboard = []
+        for arg in args:
+            keyboard.append(arg)
+        if exit:
+            keyboard.append(["Exit"])
+        print(keyboard)
+        reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
+        bot.sendMessage(chat_id=chat_id, text=message, reply_markup=reply_markup)
+    else:
+        reply_markup = telegram.ReplyKeyboardHide()
+    bot.sendMessage(chat_id=chat_id, text=message, reply_markup=reply_markup)
 
 
 # def config(chat_id):
