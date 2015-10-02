@@ -117,7 +117,7 @@ def getCommand(msg,chat_id):
             logger.debug('Answer: infoTxt')
         elif(commands['start'] in command):
             logger.debug('Call: fistConfig')
-            botDef.bot.sendMessage(chat_id=botDef.chat_id, text=botDef.startTxt)
+            botDef.bot.sendMessage(chat_id=chat_id, text=botDef.startTxt)
             answer = botDef.firstConfig()
         elif chat_id in botDef.chat_id_f_config:
             answer = botDef.firstConfig()
@@ -125,22 +125,23 @@ def getCommand(msg,chat_id):
         elif(commands['config'] in command):
             logger.debug('Call: config')
             answer = botDef.config()
+            print("called config")
         elif(chat_id in botDef.chat_id_config):
             logger.debug('Call: config')
             answer = botDef.config()
-        elif chat_id in botDef.chat_id_host_config:
+        elif (chat_id in botDef.chat_id_host_config):
+            # print("called setHost")
             answer = botDef.setHost()
             logger.debug('Call: setHost')
-        elif chat_id in botDef.chat_id_port_config:
+        elif (chat_id in botDef.chat_id_port_config):
             answer = botDef.setPort()
             logger.debug('Call: setPort')
-        elif chat_id in botDef.chat_id_user_config:
+        elif (chat_id in botDef.chat_id_user_config):
             answer = botDef.setUser()
             logger.debug('Call: serUsername')
-        elif chat_id in botDef.chat_id_passwd_config:
+        elif (chat_id in botDef.chat_id_passwd_config):
             answer = botDef.setPassword()
             logger.debug('Call: setPassword')
-
         elif(commands['hash'] in command):
             print(par)
             if par[1:-1]=="":

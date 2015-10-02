@@ -148,6 +148,7 @@ def setKeyboard(*args, chat_id=chat_id, message="Prova", exit=True, hide=False):
 def config():
     global chat_id
     global text
+    global chat_id_host_config
     if chat_id not in chat_id_config:
         chat_id_config.append(chat_id)
         msg = "Which parameter you want to change?"
@@ -156,6 +157,7 @@ def config():
         if text == "Host":
             if chat_id not in chat_id_host_config:
                 chat_id_host_config.append(chat_id)
+                print(chat_id_host_config)
                 msg = "Write your host"
                 setKeyboard(message=msg, chat_id=chat_id, hide=True)
         elif text == "Port":
@@ -184,8 +186,16 @@ def config():
     
 
 def setHost():
-    
-    return "Host setted"
+    global text
+    #===========================================================================
+    # if not text[:7] == ("http://" or "https:/"):
+    #     return "Address not correct, please follow the example.\nEs: http://myaddress.me"
+    # else:
+    #     writeConfig(text, 1)
+    #     return "Host address setted"
+    #===========================================================================
+    print("called setHost")
+    return
  
  
 def setPort():
@@ -201,3 +211,4 @@ def setUsername():
 def setPassword():
 
     return "Password setted"
+
