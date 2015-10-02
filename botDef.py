@@ -12,7 +12,7 @@ helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands:
 
 bot = telegram.Bot(config.TOKEN)
 text = ''
-chat_id = '' # unique id for the chat user - for now the bot will be able to serve one person at a time
+chat_id = ''
 update_id = ''
 username = ''
 LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
@@ -23,6 +23,7 @@ chat_id_host_config = []
 chat_id_port_config = []
 chat_id_user_config = []
 chat_id_passwd_config = []
+
 
 # def __init__(self):
 #     logger = logging.getLogger("telegram_bot.Bot")
@@ -39,19 +40,16 @@ def update():
         text = update.message.text
         chat_id = update.message.chat.id
         update_id = update.update_id
-        # username = update.username no attribute username in update
 
 
 def readConfig():
     parameter = ["","","","","",""]
     global chat_id
     name_file = "chat_id_file/" + str(chat_id)
-    # doesn't create the file
-    f = open(name_file, "r")
+    f = open(name_file, "r") #doesn't create the file
     for i in range(6):
         parameter[i]=f.readline()[:-1]
         # print(parameter[i])
-        # parameter.append(line[:-1])
     f.close()
     return parameter
 
@@ -78,8 +76,6 @@ def writeConfig(data,index):
 def firstConfig():
     global chat_id
     global text
-    # global username
-    # Add username to chat_id config dictionare, add user to still config list
     if chat_id not in chat_id_f_config:
         chat_id_f_config.append(chat_id)
         answer = "Tell me the host address \n Es: http://myaddress.me"
@@ -87,8 +83,6 @@ def firstConfig():
     else:
         parameter =[]
         parameter = readConfig()
-        #print("par=" + str(parameter))
-        #print ("par 0 = " + parameter[0])
         if parameter[0] == "0":
             if not text[:7] == ("http://" or "https:/"): 
                 answer = "Address not correct, please follow the example.\nEs: http://myaddress.me"
@@ -115,9 +109,10 @@ def firstConfig():
             writeConfig(text, 4)
             writeConfig("4", 0)
             answer = ""
-            parameter = readConfig() # rileggo il file altrimenti il campo password rimane quello prima del settaggio
+            parameter = readConfig() # read the file again to update the password data
             msg = "Correct? \nAddress: " + parameter[1] + "\nPort: "+ parameter[2] + "\nUsername: "+ parameter[3] + "\nPassword: "+ parameter[4]
             setKeyboard(["YES","NO"], message=msg, chat_id=chat_id, hide=False, exit=False)
+            answer = ""
         elif parameter[0]=="4":
             if text=="YES":
                 msg = "All set, have fun and keep seedind!"
@@ -143,59 +138,66 @@ def setKeyboard(*args, chat_id=chat_id, message="Prova", exit=True, hide=False):
             keyboard.append(arg)
         if exit:
             keyboard.append(["Exit"])
-        print(keyboard)
-        print(message)
+        # print(keyboard)
+        # print(message)
         reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
     else:
         reply_markup = telegram.ReplyKeyboardHide()
     bot.sendMessage(chat_id=chat_id, text=message, reply_markup=reply_markup)
 
-# Tutta da rivedere, bisogna mettere il numero di chat_id dentro il rispettivo array
-# def config():
-#     global chat_id
-#     global text
-#     if chat_id not in chat_id_config:
-#         chat_id_config.append(chat_id)
-#         msg = "Which parameter you want to change?"
-#         setKeyboard(["Host", "Port"], ["Username","Password"], message=msg, chat_id=chat_id, hide=False, exit=True)
-#     if text == "Host":
-#         if chat_id not in chat_id_config:
-#             chat_id_host_config.append(chat_id)
-#     elif text == "Port":
-#         if chat_id not in chat_id_config:
-#             chat_id_port_config.append(chat_id)
-#     elif text == "Username":
-#         if chat_id not in chat_id_config:
-#             chat_id_user_config.append(chat_id)
-#     elif text == "Password":
-#         if chat_id not in chat_id_config:
-#             chat_id_passwd_config.append(chat_id)
-#     elif text == "Exit":
-#         return ""
-#     else:
-#         return ""
-#     
-# 
-# def setHost():
-#     msg = "Write your host"
-#     setKeyboard(message=msg, chat_id=chat_id, hide=True)
-#     
-#     return ""
-# 
-# 
-# def setPort():
-#     msg = "Write your port"
-#     setKeyboard(message=msg, chat_id=chat_id, hide=True)
-#     return ""
-# 
-# 
-# def setUsername():
-#     msg = "Write your username.\nWrite NULL to leave it blank"
-#     setKeyboard(message=msg, chat_id=chat_id, hide=True)
-#     return ""
-# 
-# 
-# def setPassword():
-#     msg = "Write your password.\nWrite NULL to leave it blank"
-#     setKeyboard(message=msg, chat_id=chat_id, hide=True)
-#     return ""
+def config():
+    global chat_id
+    global text
+    if chat_id not in chat_id_config:
+        chat_id_config.append(chat_id)
+        msg = "Which parameter you want to change?"
+        setKeyboard(["Host", "Port"], ["Username","Password"], message=msg, chat_id=chat_id, hide=False, exit=True)
+    else:
+        if text == "Host":
+            if chat_id not in chat_id_host_config:
+                chat_id_host_config.append(chat_id)
+                msg = "Write your host"
+                setKeyboard(message=msg, chat_id=chat_id, hide=True)
+        elif text == "Port":
+            if chat_id not in chat_id_port_config:
+                chat_id_port_config.append(chat_id)
+                msg = "Write your port"
+                setKeyboard(message=msg, chat_id=chat_id, hide=True)
+        elif text == "Username":
+            if chat_id not in chat_id_user_config:
+                chat_id_user_config.append(chat_id)
+                msg = "Write your username.\nWrite NULL to leave it blank"
+                setKeyboard(message=msg, chat_id=chat_id, hide=True)
+        elif text == "Password":
+            if chat_id not in chat_id_passwd_config:
+                chat_id_passwd_config.append(chat_id)
+                msg = "Write your password.\nWrite NULL to leave it blank"
+                setKeyboard(message=msg, chat_id=chat_id, hide=True)
+        elif text == "Exit":
+            chat_id_config.remove(chat_id)
+            msg = "Config ended"
+            setKeyboard(message=msg, chat_id=chat_id, hide=True)
+            return ""
+        else:
+            logger.debug("error config")
+            return ""
+    
+
+def setHost():
+    
+    return "Host setted"
+ 
+ 
+def setPort():
+     
+    return "Port setted"
+ 
+ 
+def setUsername():
+
+    return "Username setted"
+ 
+ 
+def setPassword():
+
+    return "Password setted"

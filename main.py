@@ -125,21 +125,22 @@ def getCommand(msg,chat_id):
         elif(commands['config'] in command):
             logger.debug('Call: config')
             answer = botDef.config()
-#         elif chat_id in botDef.chat_id_host_config:
-#             answer = botDef.setHost()
-#             logger.debug('Call: setHost')
-#         elif chat_id in botDef.chat_port__config:
-#             answer = botDef.setPort()
-#             logger.debug('Call: setPort')
-#         elif chat_id in botDef.chat_id_user_config:
-#             answer = botDef.setUser()
-#             logger.debug('Call: serUsername')
-#         elif chat_id in botDef.chat_id_passwd_config:
-#             answer = botDef.setPassword()()
-#             logger.debug('Call: setPassword')
-        
-            #print("\n entro nella first config perchè persona nell'array")
-            #print(botDef.chat_id_f_config)
+        elif(chat_id in botDef.chat_id_config):
+            logger.debug('Call: config')
+            answer = botDef.config()
+        elif chat_id in botDef.chat_id_host_config:
+            answer = botDef.setHost()
+            logger.debug('Call: setHost')
+        elif chat_id in botDef.chat_id_port_config:
+            answer = botDef.setPort()
+            logger.debug('Call: setPort')
+        elif chat_id in botDef.chat_id_user_config:
+            answer = botDef.setUser()
+            logger.debug('Call: serUsername')
+        elif chat_id in botDef.chat_id_passwd_config:
+            answer = botDef.setPassword()
+            logger.debug('Call: setPassword')
+
         elif(commands['hash'] in command):
             print(par)
             if par[1:-1]=="":
@@ -152,9 +153,6 @@ def getCommand(msg,chat_id):
             handleTorrent.addMagnet(magnet)
             answer = 'Magnet added succesfully!'
             logger.debug('Answer: Manget added')
-        elif(commands['config'] in command):
-            print("config")
-            #botDef.config()
         else:
             answer = 'No command or magnet found. Press /help for the list of the supported commands'
             logger.debug('No command')
