@@ -6,7 +6,7 @@ env/
 /__pycache__
 /__init__.py
 /config.py
-
+/.idea
 config.py
 
 chat_id_file/
