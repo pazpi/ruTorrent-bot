@@ -6,9 +6,11 @@
 #
 # TO DO:
 # After the description setted with the BotFather user will send the /start command
-# Now starts the setting process where the bot will ask first the host, port, user and password for logging in to your rutorrent page.
+# Now starts the setting process where the bot will ask first the host, port, user and password for logging in to your
+# rutorrent page.
 # Future changes to this setting can be done by using /config where the keyboard change to set HOST and PORT
-# So selecting Host bot will ask the url and after that the kwybord return to the sepcific one for config until you select EXIT
+# So selecting Host, bot will ask the url and after that the keyboard return to the specific one for config until you
+# select EXIT
 # To add magnet you only need to send the magnet link without any command
 
 # add more command like:
@@ -52,12 +54,12 @@ commands = {
 
 
 def main(argv=None):
-    SetLogger()
+    setlogger()
     if argv is None or len(argv) <= 1:
-        Init()
+        init()
 
 
-def SetLogger():
+def setlogger():
     global logger
     logger = logging.getLogger(__name__)
     # NOSET DEBUG INFO WARNING ERROR CRITICAL
@@ -78,7 +80,7 @@ def SetLogger():
     logger.info('Log initialized')
 
 
-def Init():
+def init():
     # Create bot object
     global bot
     # Creation of bot object
@@ -87,7 +89,7 @@ def Init():
     global LAST_UPDATE_ID
     LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
     # xmlrpc settings
-    server = xmlrpc.client.ServerProxy(HOST)
+    # server = xmlrpc.client.ServerProxy(HOST)
     # Get the latest update
     logger.info("-- Init -- BOT creation")
     # Infinite Loop
