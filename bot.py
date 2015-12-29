@@ -1,4 +1,4 @@
-# ruTorrent Bot for add torrent and monitorate your seedmachine
+# ruTorrent Bot for add torrent and monitor your seedmachine
 # command list:
 # /help
 # /info
@@ -17,10 +17,9 @@
 # /hash to add a torrent based on his hash
 # add the option to have multiple session
 
-import logging, coloredlogs
+import logging
 from logging.handlers import RotatingFileHandler
 # requests module for basic http post
-from requests import post
 from requests.auth import HTTPBasicAuth
 # telegram module for easy work with bot conf
 import telegram
@@ -43,13 +42,14 @@ infoTxt = "Authors: @pazpi @martinotu \nGithub: https://github.com/pazpi/ruTorre
 helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands: \n/magnet - Add torrent with magnetic link \n/help - This message will be shown \n/info - Show more info about me \n\nFor Example: \n/magnet magnet:?xt=urn:btih:828e86180150213c10677495565baef6b232dbdd&dn=archlinux-2015.08.01-dual.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce"
 
 commands = {
-'start': '/start',
-'info': '/info',
-'help': '/help',
-'host': '/host',
-'config': '/config',
-'hash':'/hash'
+    'start': '/start',
+    'info': '/info',
+    'help': '/help',
+    'host': '/host',
+    'config': '/config',
+    'hash': '/hash'
 }
+
 
 def main(argv=None):
     SetLogger()
@@ -64,7 +64,8 @@ def SetLogger():
     logger.setLevel(logging.DEBUG)
 
     # Create a file handler where log is located
-    handler = RotatingFileHandler('rutorrent.log', mode='a', maxBytes=5 * 1024 * 1024, backupCount=5, encoding=None, delay=0)
+    handler = RotatingFileHandler('rutorrent.log', mode='a', maxBytes=5 * 1024 * 1024, backupCount=5, encoding=None,
+                                  delay=0)
     handler.setLevel(logging.DEBUG)
 
     # Create a logging format
@@ -74,7 +75,8 @@ def SetLogger():
     # Add the handlers to the logger
     logger.addHandler(handler)
 
-    logger.info('Log inizialized')
+    logger.info('Log initialized')
+
 
 def Init():
     # Create bot object
@@ -94,14 +96,13 @@ def Init():
 
 
 def UpdateLoop():
-
     while True:
         try:
             ManageUpdates()
             sleep(1)
         except Exception:
             # Error
-            #logging.exception()
+            # logging.exception()
             logger.error("Exit from loop!")
 
 
@@ -109,52 +110,52 @@ def ManageUpdates():
     global LAST_UPDATE_ID
     logger.info("LAST_UPDATE_ID: %s", LAST_UPDATE_ID)
     updates = bot.getUpdates(offset=LAST_UPDATE_ID)
-    if(not updates):
+    if (not updates):
         logger.error("Couldn't get updates")
         return
     for update in updates:
         command = update.message.text
         chat_id = update.message.chat.id
         update_id = update.update_id
-        #answer = ''
+        # answer = ''
         # If newer than the initial
         if LAST_UPDATE_ID < update_id:
             if command:
                 answer = GetCommand(command)
-                if(answer):
+                if (answer):
                     bot.sendMessage(chat_id=chat_id, text=answer)
                 LAST_UPDATE_ID = update_id
 
 
 def GetCommand(msg):
     answer = ''
-    if(msg):
+    if (msg):
         command = msg.split()[:1]
         command = str(command)
         host = msg.split()[1:]
         host = str(host)
-        if("/" in command):
+        if ("/" in command):
             logger.debug('Command: ' + command)
         else:
             logger.debug('Message: ' + command)
-        if(commands['help'] in command):
+        if (commands['help'] in command):
             answer = helpTxt
             logger.debug('Answer: helpTxt')
-        elif(commands['info'] in command):
+        elif (commands['info'] in command):
             answer = infoTxt
             logger.debug('Answer: infoTxt')
-        elif(commands['start'] in command):
+        elif (commands['start'] in command):
             answer = startTxt
             logger.debug('Answer: startTxt')
-        elif(commands['hash'] in command):
+        elif (commands['hash'] in command):
             addMagnet(Hash2Magnet(host))
             answer = "Hash added succesfully"
-        elif(command[2:8] == 'magnet'):
+        elif (command[2:8] == 'magnet'):
             addMagnet(command)
             answer = 'Magnet added succesfully!'
             logger.debug('Answer: Manget added')
-        elif(commands['host'] in command):
-            if(host == '[]'):
+        elif (commands['host'] in command):
+            if (host == '[]'):
                 answer = config.HOST
                 logger.debug('Answer: Host replay')
             else:
@@ -168,9 +169,9 @@ def GetCommand(msg):
 
 def Hash2Magnet(hash):
     magnet = ''
-    megnet = "magnet:?xt=urn:btih:" + hash
+    magnet = "magnet:?xt=urn:btih:" + hash
     return magnet
-    
+
 
 def addMagnet(torrent):
     torrent = torrent[2:-2]
@@ -178,6 +179,7 @@ def addMagnet(torrent):
     # Test ArchLinux ISO
     # url = 'http://192.168.1.190/ruTorrent/php/addtorrent.php?url=' + 'magnet:?xt=urn:btih:828e86180150213c10677495565baef6b232dbdd&dn=archlinux-2015.08.01-dual.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce'
     requests.post(url, auth=HTTPBasicAuth(USERNAME, PASSWORD))
+
 
 if __name__ == '__main__':
     main()
