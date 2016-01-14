@@ -1,8 +1,10 @@
 # botDef.py
 # telegram module for easy work with bot conf
 import telegram
+# file used to store sensible data, like API key
 import config
 import logging
+import ClassUsers
 
 logger = logging.getLogger(__name__)
 
@@ -42,11 +44,17 @@ def update():
         update_id = update.update_id
 
 
-def readConfig():
-    parameter = ["","","","","",""]
+def read_user_info():
+    global chat_id
+    user = ClassUsers.load(chat_id)
+    return user
+
+
+def readconfig():
+    parameter = ["", "", "", "", "", ""]
     global chat_id
     name_file = "chat_id_file/" + str(chat_id)
-    f = open(name_file, "r") #doesn't create the file
+    f = open(name_file, "r")  # doesn't create the file
     for i in range(6):
         parameter[i]=f.readline()[:-1]
         # print(parameter[i])
@@ -54,83 +62,99 @@ def readConfig():
     return parameter
 
 
-def writeConfig(data,index):
+def write_user_info(user):
     global chat_id
-    parameter = []
-    parameter = readConfig()
-    #print("parameter befor writing: ")
-    #print(parameter)
-    name_file = "chat_id_file/" + str(chat_id)
-    f = open(name_file, "w")
-    parameter.pop(index)
-    parameter.insert(index, data)
-    #print("parameter after writing")
-    #print(parameter)
-    f.close()
-    name_file = "chat_id_file/" + str(chat_id)
-    f = open(name_file, "w")
-    f.write('\n'.join(str(line) for line in parameter))
-    f.close()
+    user.dump(chat_id)
 
 
-def firstConfig():
+def writeconfig(data, index):
+    global chat_id
+    user = read_user_info()
+    if index == 0:
+        user.status = data
+    elif index == 1:
+        user.host = data
+    elif index == 2:
+        user.port = data
+    elif index == 3:
+        user.username = data
+    elif index == 4:
+        user.password = data
+    user.dump(chat_id)
+    # parameter = readconfig()
+    # print("parameter before writing: ")
+    # print(parameter)
+    # name_file = "chat_id_file/" + str(chat_id)
+    # f = open(name_file, "w")
+    # parameter.pop(index)
+    # parameter.insert(index, data)
+    # print("parameter after writing")
+    # print(parameter)
+    # f.close()
+    # name_file = "chat_id_file/" + str(chat_id)
+    # f = open(name_file, "w")
+    # f.write('\n'.join(str(line) for line in parameter))
+    # f.close()
+
+
+def firstconfig():
     global chat_id
     global text
     if chat_id not in chat_id_f_config:
         chat_id_f_config.append(chat_id)
         answer = "Tell me the host address \n Es: http://myaddress.me"
-        writeConfig("0", 0)
+        writeconfig("0", 0)
     else:
-        parameter =[]
-        parameter = readConfig()
-        if parameter[0] == "0":
+        user = read_user_info()
+        if user.status == "0":
             if not text[:7] == ("http://" or "https:/"): 
                 answer = "Address not correct, please follow the example.\nEs: http://myaddress.me"
             else:
                 answer = "Tell me the host port \n Es: 8080"
-                writeConfig("1", 0)
-                writeConfig(text, 1)
-        elif parameter[0]=="1":
+                writeconfig("1", 0)
+                writeconfig(text, 1)
+        elif user.status == "1":
             if text.isdigit():
                 text = int(text)
                 if text <= 65536 and text > 0:
-                    writeConfig(text, 2)
-                    writeConfig("2", 0)
+                    writeconfig(text, 2)
+                    writeconfig("2", 0)
                     answer = "Tell me the host username."
                 else:
                     answer = "Out of range.\nMust be between 1 and 65536"
             else:
                 answer = "Port not valid.\nEs: 8080"
-        elif parameter[0]=="2":
-            writeConfig(text, 3)
-            writeConfig("3", 0)
+        elif user.status == "2":
+            writeconfig(text, 3)
+            writeconfig("3", 0)
             answer = "Tell me the host password"
-        elif parameter[0]=="3":
-            writeConfig(text, 4)
-            writeConfig("4", 0)
+        elif user.status == "3":
+            writeconfig(text, 4)
+            writeconfig("4", 0)
+            user = read_user_info()
+            # parameter = readconfig() # read the file again to update the password data
+            msg = "Correct? \nAddress: " + user.host + "\nPort: " + user.port + "\nUsername: " + user.username +\
+                  "\nPassword: " + user.password
+            setkeyboard(["YES", "NO"], message=msg, chat_id=chat_id, hide=False, exit=False)
             answer = ""
-            parameter = readConfig() # read the file again to update the password data
-            msg = "Correct? \nAddress: " + parameter[1] + "\nPort: "+ parameter[2] + "\nUsername: "+ parameter[3] + "\nPassword: "+ parameter[4]
-            setKeyboard(["YES","NO"], message=msg, chat_id=chat_id, hide=False, exit=False)
-            answer = ""
-        elif parameter[0]=="4":
-            if text=="YES":
-                msg = "All set, have fun and keep seedind!"
-                setKeyboard(message=msg, chat_id=chat_id, hide=True)
-            elif text=="NO":
+        elif user.status == "4":
+            if text == "YES":
+                msg = "All set, have fun and keep seeding!"
+                setkeyboard(message=msg, chat_id=chat_id, hide=True)
+            elif text == "NO":
                 msg = "Write /config to change settings"
-                setKeyboard(message=msg, chat_id=chat_id, hide=True)            
+                setkeyboard(message=msg, chat_id=chat_id, hide=True)
             else:
                 msg = "In order to change settings type /config"
-                setKeyboard(message=msg, chat_id=chat_id, hide=True)            
+                setkeyboard(message=msg, chat_id=chat_id, hide=True)
             chat_id_f_config.remove(chat_id)
             answer = ""
         else:
-            answer = "errore"
+            answer = "error"
     return answer
 
 
-def setKeyboard(*args, chat_id=chat_id, message="Prova", exit=True, hide=False):
+def setkeyboard(*args, chat_id=chat_id, message="Prova", exit=True, hide=False):
     # *arg must be an array
     if not hide:
         keyboard = []
@@ -145,6 +169,7 @@ def setKeyboard(*args, chat_id=chat_id, message="Prova", exit=True, hide=False):
         reply_markup = telegram.ReplyKeyboardHide()
     bot.sendMessage(chat_id=chat_id, text=message, reply_markup=reply_markup)
 
+
 def config():
     global chat_id
     global text
@@ -152,63 +177,89 @@ def config():
     if chat_id not in chat_id_config:
         chat_id_config.append(chat_id)
         msg = "Which parameter you want to change?"
-        setKeyboard(["Host", "Port"], ["Username","Password"], message=msg, chat_id=chat_id, hide=False, exit=True)
+        setkeyboard(["Host", "Port"], ["Username", "Password"], message=msg, chat_id=chat_id, hide=False, exit=True)
     else:
+        # User has type something form the custom keyboard
         if text == "Host":
             if chat_id not in chat_id_host_config:
                 chat_id_host_config.append(chat_id)
                 print(chat_id_host_config)
                 msg = "Write your host"
-                setKeyboard(message=msg, chat_id=chat_id, hide=True)
+                setkeyboard(message=msg, chat_id=chat_id, hide=True)
         elif text == "Port":
             if chat_id not in chat_id_port_config:
                 chat_id_port_config.append(chat_id)
                 msg = "Write your port"
-                setKeyboard(message=msg, chat_id=chat_id, hide=True)
+                setkeyboard(message=msg, chat_id=chat_id, hide=True)
         elif text == "Username":
             if chat_id not in chat_id_user_config:
                 chat_id_user_config.append(chat_id)
                 msg = "Write your username.\nWrite NULL to leave it blank"
-                setKeyboard(message=msg, chat_id=chat_id, hide=True)
+                setkeyboard(message=msg, chat_id=chat_id, hide=True)
         elif text == "Password":
             if chat_id not in chat_id_passwd_config:
                 chat_id_passwd_config.append(chat_id)
                 msg = "Write your password.\nWrite NULL to leave it blank"
-                setKeyboard(message=msg, chat_id=chat_id, hide=True)
+                setkeyboard(message=msg, chat_id=chat_id, hide=True)
         elif text == "Exit":
             chat_id_config.remove(chat_id)
             msg = "Config ended"
-            setKeyboard(message=msg, chat_id=chat_id, hide=True)
+            setkeyboard(message=msg, chat_id=chat_id, hide=True)
             return ""
         else:
             logger.debug("error config")
             return ""
     
 
-def setHost():
+def sethost():
     global text
-    #===========================================================================
-    # if not text[:7] == ("http://" or "https:/"):
-    #     return "Address not correct, please follow the example.\nEs: http://myaddress.me"
-    # else:
-    #     writeConfig(text, 1)
-    #     return "Host address setted"
-    #===========================================================================
-    print("called setHost")
-    return
+    global chat_id
+    print("called sethost")
+    if not text[:7] == ("http://" or "https:/"):
+        return "Address not correct, please follow the example.\nEs: http://myaddress.me"
+    else:
+        chat_id_host_config.remove(chat_id)
+        user = ClassUsers.load(chat_id)
+        user.host = text
+        user.dump(chat_id)
+        chat_id_config.remove(chat_id)
+        return "Host address setted"
  
  
-def setPort():
-     
-    return "Port setted"
- 
- 
-def setUsername():
+def setport():
+    global text
+    global chat_id
+    print("called setport")
+    if not text.isdigit:
+        return "Port not correct, make sure is a number.\nEs: 80, 8080"
+    else:
+        chat_id_port_config.remove(chat_id)
+        user = ClassUsers.load(chat_id)
+        user.port = text
+        user.dump(chat_id)
+        chat_id_config.remove(chat_id)
+        return "Port setted"
 
-    return "Username setted"
- 
- 
-def setPassword():
 
+def setusername():
+    global text
+    global chat_id
+    print("called setusername")
+    chat_id_user_config.remove(chat_id)
+    user = ClassUsers.load(chat_id)
+    user.hostname = text
+    user.dump(chat_id)
+    chat_id_config.remove(chat_id)
+    return "Hostname setted"
+ 
+ 
+def setpassword():
+    global text
+    global chat_id
+    print("called setusername")
+    chat_id_passwd_config.remove(chat_id)
+    user = ClassUsers.load(chat_id)
+    user.password = text
+    user.dump(chat_id)
+    chat_id_config.remove(chat_id)
     return "Password setted"
-
