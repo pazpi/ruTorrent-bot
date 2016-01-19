@@ -2,7 +2,7 @@
 # telegram module for easy work with bot conf
 import telegram
 # file used to store sensible data, like API key
-import config
+import token
 import logging
 import ClassUsers
 
@@ -12,7 +12,7 @@ startTxt = "Hi! I'm a bot developed by @pazpi and @martinotu to add torrent to y
 infoTxt = "Authors: @pazpi @martinotu \nGithub: https://github.com/pazpi/ruTorrent-bot \nBy using this bot you agree that your doing so at your own risk. Authors will not be responsible for any choices based on advices from this bot. And remember: keep seeding!"
 helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands: \n/help - This message will be shown \n/info - Show more info about me \n/hash - To add a torrent from his hash\n\nTo add a Torrend from his magnet link just sent the link :D\n\n"
 
-bot = telegram.Bot(config.TOKEN)
+bot = telegram.Bot(token.TOKEN)
 text = ''
 chat_id = ''
 update_id = ''
