@@ -57,6 +57,7 @@ def init():
     # xmlrpc settings
     # server = xmlrpc.client.ServerProxy(HOST)
     logger.info("-- init -- BOT creation")
+    print("init")
     # Infinite Loop
     updateloop()
     return
@@ -91,7 +92,7 @@ def getcommand(msg, chat_id):
     # print("ciao " + f.readline())
     # print("status=" + status)
     # print(parameter)
-    name_file = "chat_id_file/" + str(chat_id)
+    name_file = "chat_id_file/" + str(chat_id) + ".pkl"
     f = open(name_file, "a+")
     f.close()
     if msg:

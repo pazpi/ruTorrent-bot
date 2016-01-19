@@ -56,7 +56,7 @@ def readconfig():
     name_file = "chat_id_file/" + str(chat_id)
     f = open(name_file, "r")  # doesn't create the file
     for i in range(6):
-        parameter[i]=f.readline()[:-1]
+        parameter[i] = f.readline()[:-1]
         # print(parameter[i])
     f.close()
     return parameter
@@ -219,7 +219,10 @@ def sethost():
         return "Address not correct, please follow the example.\nEs: http://myaddress.me"
     else:
         chat_id_host_config.remove(chat_id)
-        user = ClassUsers.load(chat_id)
+        try:
+            user = ClassUsers.load(chat_id)
+        except EOFError:
+            user = ClassUsers.ChatIDUser()
         user.host = text
         user.dump(chat_id)
         chat_id_config.remove(chat_id)
