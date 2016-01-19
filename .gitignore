@@ -5,8 +5,9 @@ env/
 /rutorrent.log
 /__pycache__
 /__init__.py
-/config.py
+/token.py
 /.idea
 config.py
+token.py
 
 chat_id_file/
