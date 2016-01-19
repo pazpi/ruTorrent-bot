@@ -1,5 +1,0 @@
-TOKEN = ''
-ADDRESS = ''
-PORT = ''
-USERNAME = ''
-PASSWORD = ''
