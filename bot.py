@@ -22,13 +22,14 @@
 import logging
 from logging.handlers import RotatingFileHandler
 # requests module for basic http post
+import requests
 from requests.auth import HTTPBasicAuth
 # telegram module for easy work with bot conf
 import telegram
 # file used to store sensible data, like API key
 import config
 # xmlrpc module for rtorrent communication
-import xmlrpc.client
+# import xmlrpc.client
 from time import sleep
 
 logger = {}
@@ -39,9 +40,14 @@ token = config.TOKEN
 HOST = config.HOST
 USERNAME = config.USERNAME
 PASSWORD = config.PASSWORD
-startTxt = "Hi! I'm a bot developed by @pazpi and @martinotu to add torrent to your seedmachine \nAvailable commands: \n- /start \n- /help \n- /info \n- /host"
-infoTxt = "Authors: @pazpi @martinotu \nGithub: https://github.com/pazpi/ruTorrent-bot \nBy using this bot you agree that your doing so at your own risk. Authors will not be responsible for any choices based on advices from this bot. And remember: keep seeding!"
-helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands: \n/magnet - Add torrent with magnetic link \n/help - This message will be shown \n/info - Show more info about me \n\nFor Example: \n/magnet magnet:?xt=urn:btih:828e86180150213c10677495565baef6b232dbdd&dn=archlinux-2015.08.01-dual.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce"
+startTxt = "Hi! I'm a bot developed by @pazpi and @martinotu to add torrent to your seedmachine \n" \
+           "Available commands: \n- /help \n- /info \n- /hash"
+infoTxt = "Authors: @pazpi @martinotu \nGithub: https://github.com/pazpi/ruTorrent-bot \n" \
+          "By using this bot you agree that your doing so at your own risk. Authors will not be responsible for any " \
+          "choices based on advices from this bot. And remember: keep seeding!"
+helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands: \n/help - Show this message\n" \
+          "/info - Show more info about me \n/hash - To add a torrent from his hash\n\n" \
+          "To add a torrent from his magnet link just sent the link :D\n\n"
 
 commands = {
     'start': '/start',
@@ -64,23 +70,20 @@ def setlogger():
     logger = logging.getLogger(__name__)
     # NOSET DEBUG INFO WARNING ERROR CRITICAL
     logger.setLevel(logging.DEBUG)
-
     # Create a file handler where log is located
     handler = RotatingFileHandler('rutorrent.log', mode='a', maxBytes=5 * 1024 * 1024, backupCount=5, encoding=None,
                                   delay=0)
     handler.setLevel(logging.DEBUG)
-
     # Create a logging format
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(funcName)s(%(lineno)d) %(message)s')
     handler.setFormatter(formatter)
-
     # Add the handlers to the logger
     logger.addHandler(handler)
-
     logger.info('Log initialized')
 
 
 def init():
+    global logger
     # Create bot object
     global bot
     # Creation of bot object
@@ -93,14 +96,15 @@ def init():
     # Get the latest update
     logger.info("-- Init -- BOT creation")
     # Infinite Loop
-    UpdateLoop()
+    updateloop()
     return
 
 
-def UpdateLoop():
+def updateloop():
+    global logger
     while True:
         try:
-            ManageUpdates()
+            manageupdates()
             sleep(1)
         except Exception:
             # Error
@@ -108,56 +112,57 @@ def UpdateLoop():
             logger.error("Exit from loop!")
 
 
-def ManageUpdates():
+def manageupdates():
+    global logger
     global LAST_UPDATE_ID
     logger.info("LAST_UPDATE_ID: %s", LAST_UPDATE_ID)
     updates = bot.getUpdates(offset=LAST_UPDATE_ID)
-    if (not updates):
+    if not updates:
         logger.error("Couldn't get updates")
         return
     for update in updates:
         command = update.message.text
         chat_id = update.message.chat.id
         update_id = update.update_id
-        # answer = ''
         # If newer than the initial
         if LAST_UPDATE_ID < update_id:
             if command:
-                answer = GetCommand(command)
-                if (answer):
+                answer = getcommand(command)
+                if answer:
                     bot.sendMessage(chat_id=chat_id, text=answer)
                 LAST_UPDATE_ID = update_id
 
 
-def GetCommand(msg):
+def getcommand(msg):
+    global logger
     answer = ''
-    if (msg):
+    if msg:
         command = msg.split()[:1]
         command = str(command)
         host = msg.split()[1:]
         host = str(host)
-        if ("/" in command):
+        if "/" in command:
             logger.debug('Command: ' + command)
         else:
             logger.debug('Message: ' + command)
-        if (commands['help'] in command):
+        if commands['help'] in command:
             answer = helpTxt
             logger.debug('Answer: helpTxt')
-        elif (commands['info'] in command):
+        elif commands['info'] in command:
             answer = infoTxt
             logger.debug('Answer: infoTxt')
-        elif (commands['start'] in command):
+        elif commands['start'] in command:
             answer = startTxt
             logger.debug('Answer: startTxt')
-        elif (commands['hash'] in command):
-            addMagnet(Hash2Magnet(host))
-            answer = "Hash added succesfully"
-        elif (command[2:8] == 'magnet'):
-            addMagnet(command)
-            answer = 'Magnet added succesfully!'
+        elif commands['hash'] in command:
+            addmagnet(hash2magnet(host))
+            answer = "Hash added successfully"
+        elif command[2:8] == 'magnet':
+            addmagnet(command)
+            answer = 'Magnet added successfully!'
             logger.debug('Answer: Manget added')
-        elif (commands['host'] in command):
-            if (host == '[]'):
+        elif commands['host'] in command:
+            if host == '[]':
                 answer = config.HOST
                 logger.debug('Answer: Host replay')
             else:
@@ -169,17 +174,14 @@ def GetCommand(msg):
     return answer
 
 
-def Hash2Magnet(hash):
-    magnet = ''
+def hash2magnet(hash):
     magnet = "magnet:?xt=urn:btih:" + hash
     return magnet
 
 
-def addMagnet(torrent):
+def addmagnet(torrent):
     torrent = torrent[2:-2]
-    url = host + 'ruTorrent/php/addtorrent.php?url=' + torrent
-    # Test ArchLinux ISO
-    # url = 'http://192.168.1.190/ruTorrent/php/addtorrent.php?url=' + 'magnet:?xt=urn:btih:828e86180150213c10677495565baef6b232dbdd&dn=archlinux-2015.08.01-dual.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce'
+    url = HOST + 'ruTorrent/php/addtorrent.php?url=' + torrent
     requests.post(url, auth=HTTPBasicAuth(USERNAME, PASSWORD))
 
 
