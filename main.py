@@ -12,7 +12,7 @@
 # Now starts the setting process where the bot will ask first the host, port, user and password for logging in to
 # your rutorrent page.
 # Future changes to this setting can be done by using /config where the keyboard change to set HOST and PORT
-# So selecting Host bot will ask the url and after that the kwybord return to the sepcific one for config until
+# So selecting Host bot will ask the url and after that the keyboard return to the specific one for config until
 # you select EXIT
 # To add magnet you only need to send the magnet link without any command
 
@@ -133,7 +133,7 @@ def getcommand(msg, chat_id):
         elif chat_id in botDef.chat_id_user_config:
             answer = botDef.setusername()
             logger.debug('Call: serUsername')
-        elif chat_id in botDef.chat_id_passwd_config:
+        elif chat_id in botDef.chat_id_password_config:
             answer = botDef.setpassword()
             logger.debug('Call: setpassword')
         elif chat_id in botDef.chat_id_config:
@@ -144,11 +144,11 @@ def getcommand(msg, chat_id):
             if par[1:-1] == "":
                 answer = "Put a hash after the /hash command!"
             else:
-                handleTorrent.addmagnet(handleTorrent.hash2magnet(par))
+                handleTorrent.addmagnet(handleTorrent.hash2magnet(par), chat_id)
                 answer = "Hash added successfully"
         elif command[2:8] == 'magnet':
             magnet = command[2:-2]
-            handleTorrent.addmagnet(magnet)
+            handleTorrent.addmagnet(magnet, chat_id)
             answer = 'Magnet added successfully!'
             logger.debug('Answer: Manget added')
         else:
