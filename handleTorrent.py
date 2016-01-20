@@ -7,6 +7,7 @@
 # requests module for basic http post
 import requests
 from requests.auth import HTTPBasicAuth
+import ClassUsers
 # telegram module for easy work with bot conf
 # import telegram
 # file used to store sensible data, like API key
@@ -20,7 +21,9 @@ def hash2magnet(hash):
     return magnet
 
 
-def addmagnet(torrent):
+# TODO test this function
+def addmagnet(torrent, chat_id):
+    user = ClassUsers.load(chat_id)
     # http://pazpi.ecc to replace with the setting from the user
-    url = "http://pazpi.noip.me:8080/" + 'ruTorrent/php/addtorrent.php?url=' + torrent
-    requests.post(url, auth=HTTPBasicAuth("", ""))
+    url = user.host + ":" + user.port + 'ruTorrent/php/addtorrent.php?url=' + torrent
+    requests.post(url, auth=HTTPBasicAuth(user.username, user.password))
