@@ -8,9 +8,14 @@ import ClassUsers
 
 logger = logging.getLogger(__name__)
 
-startTxt = "Hi! I'm a bot developed by @pazpi and @martinotu to add torrent to your seedmachine \nAvailable commands: \n- /help \n- /info \n- /hash"
-infoTxt = "Authors: @pazpi @martinotu \nGithub: https://github.com/pazpi/ruTorrent-bot \nBy using this bot you agree that your doing so at your own risk. Authors will not be responsible for any choices based on advices from this bot. And remember: keep seeding!"
-helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands: \n/help - This message will be shown \n/info - Show more info about me \n/hash - To add a torrent from his hash\n\nTo add a Torrend from his magnet link just sent the link :D\n\n"
+startTxt = "Hi! I'm a bot developed by @pazpi and @martinotu to add torrent to your seedmachine \n" \
+           "Available commands: \n- /help \n- /info \n- /hash"
+infoTxt = "Authors: @pazpi @martinotu \nGithub: https://github.com/pazpi/ruTorrent-bot \n" \
+          "By using this bot you agree that your doing so at your own risk. Authors will not be responsible for any " \
+          "choices based on advices from this bot. And remember: keep seeding!"
+helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands: \n/help - Show this message\n" \
+          "/info - Show more info about me \n/hash - To add a torrent from his hash\n\n" \
+          "To add a torrent from his magnet link just sent the link :D\n\n"
 
 bot = telegram.Bot(token.TOKEN)
 text = ''
@@ -24,7 +29,7 @@ chat_id_config = []
 chat_id_host_config = []
 chat_id_port_config = []
 chat_id_user_config = []
-chat_id_passwd_config = []
+chat_id_password_config = []
 
 
 # def __init__(self):
@@ -38,10 +43,10 @@ def update():
     global chat_id
     global update_id
     global username
-    for update in updates:
-        text = update.message.text
-        chat_id = update.message.chat.id
-        update_id = update.update_id
+    for update_data in updates:
+        text = update_data.message.text
+        chat_id = update_data.message.chat.id
+        update_id = update_data.update_id
 
 
 def read_user_info():
@@ -107,7 +112,7 @@ def firstconfig():
     else:
         user = read_user_info()
         if user.status == "0":
-            if not text[:7] == ("http://" or "https:/"): 
+            if not text[:7] == ("http://" or "https:/"):
                 answer = "Address not correct, please follow the example.\nEs: http://myaddress.me"
             else:
                 answer = "Tell me the host port \n Es: 8080"
@@ -115,8 +120,7 @@ def firstconfig():
                 writeconfig(text, 1)
         elif user.status == "1":
             if text.isdigit():
-                text = int(text)
-                if text <= 65536 and text > 0:
+                if 65536 >= text > 0:
                     writeconfig(text, 2)
                     writeconfig("2", 0)
                     answer = "Tell me the host username."
@@ -133,9 +137,9 @@ def firstconfig():
             writeconfig("4", 0)
             user = read_user_info()
             # parameter = readconfig() # read the file again to update the password data
-            msg = "Correct? \nAddress: " + user.host + "\nPort: " + user.port + "\nUsername: " + user.username +\
+            msg = "Correct? \nAddress: " + user.host + "\nPort: " + user.port + "\nUsername: " + user.username + \
                   "\nPassword: " + user.password
-            setkeyboard(["YES", "NO"], message=msg, chat_id=chat_id, hide=False, exit=False)
+            setkeyboard(["YES", "NO"], message=msg, chat_id=chat_id, hide=False, is_exit=False)
             answer = ""
         elif user.status == "4":
             if text == "YES":
@@ -154,13 +158,13 @@ def firstconfig():
     return answer
 
 
-def setkeyboard(*args, chat_id=chat_id, message="Prova", exit=True, hide=False):
+def setkeyboard(*args, chat_id=chat_id, message="Prova", is_exit=True, hide=False):
     # *arg must be an array
     if not hide:
         keyboard = []
         for arg in args:
             keyboard.append(arg)
-        if exit:
+        if is_exit:
             keyboard.append(["Exit"])
         # print(keyboard)
         # print(message)
@@ -177,7 +181,7 @@ def config():
     if chat_id not in chat_id_config:
         chat_id_config.append(chat_id)
         msg = "Which parameter you want to change?"
-        setkeyboard(["Host", "Port"], ["Username", "Password"], message=msg, chat_id=chat_id, hide=False, exit=True)
+        setkeyboard(["Host", "Port"], ["Username", "Password"], message=msg, chat_id=chat_id, hide=False, is_exit=True)
     else:
         # User has type something form the custom keyboard
         if text == "Host":
@@ -197,8 +201,8 @@ def config():
                 msg = "Write your username.\nWrite NULL to leave it blank"
                 setkeyboard(message=msg, chat_id=chat_id, hide=True)
         elif text == "Password":
-            if chat_id not in chat_id_passwd_config:
-                chat_id_passwd_config.append(chat_id)
+            if chat_id not in chat_id_password_config:
+                chat_id_password_config.append(chat_id)
                 msg = "Write your password.\nWrite NULL to leave it blank"
                 setkeyboard(message=msg, chat_id=chat_id, hide=True)
         elif text == "Exit":
@@ -209,7 +213,7 @@ def config():
         else:
             logger.debug("error config")
             return ""
-    
+
 
 def sethost():
     global text
@@ -227,8 +231,8 @@ def sethost():
         user.dump(chat_id)
         chat_id_config.remove(chat_id)
         return "Host address setted"
- 
- 
+
+
 def setport():
     global text
     global chat_id
@@ -254,13 +258,13 @@ def setusername():
     user.dump(chat_id)
     chat_id_config.remove(chat_id)
     return "Hostname setted"
- 
- 
+
+
 def setpassword():
     global text
     global chat_id
     print("called setusername")
-    chat_id_passwd_config.remove(chat_id)
+    chat_id_password_config.remove(chat_id)
     user = ClassUsers.load(chat_id)
     user.password = text
     user.dump(chat_id)
