@@ -183,9 +183,11 @@ def config():
                       "Username: " + user.username + "\n" \
                       "Password: " + user.password
                 setkeyboard(message=msg, chat_id=chat_id, hide=True)
+                chat_id_config.remove(chat_id)
             except EOFError:
                 msg = "List empty, type /start to create a new user"
                 setkeyboard(message=msg, chat_id=chat_id, hide=True)
+                chat_id_config.remove(chat_id)
         elif text == "Exit":
             chat_id_config.remove(chat_id)
             msg = "Config ended"

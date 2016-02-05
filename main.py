@@ -105,10 +105,6 @@ def manageupdates():
 
 
 def getcommand(msg, chat_id):
-    # print("getcommand")
-    # print("ciao " + f.readline())
-    # print("status=" + status)
-    # print(parameter)
     name_file = "chat_id_file/" + str(chat_id) + ".pkl"
     f = open(name_file, "a+")
     f.close()
@@ -119,10 +115,8 @@ def getcommand(msg, chat_id):
         par = str(par)
         if "/" in command:
             logger.debug('Command: ' + command)
-            print('Command: ' + command)
         else:
             logger.debug('Message: ' + command)
-            print('Message: ' + command)
         if commands['help'] in command:
             answer = botDef.helpTxt
             logger.debug('Answer: helpTxt')
@@ -139,9 +133,7 @@ def getcommand(msg, chat_id):
         elif commands['config'] in command:
             logger.debug('Call: config')
             answer = botDef.config()
-            print("called config")
         elif chat_id in botDef.chat_id_host_config:
-            # print("called sethost")
             answer = botDef.sethost()
             logger.debug('Call: sethost')
         elif chat_id in botDef.chat_id_port_config:
@@ -157,7 +149,6 @@ def getcommand(msg, chat_id):
             logger.debug('Call: config')
             answer = botDef.config()
         elif commands['hash'] in command:
-            print(par)
             if par[1:-1] == "":
                 answer = "Put a hash after the /hash command!"
             else:
