@@ -33,12 +33,12 @@ import botDef
 
 
 logger = logging.getLogger("main")
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 # # Create a file handler where log is located
 handler = RotatingFileHandler('rutorrent.log', mode='a', maxBytes=5 * 1024 * 1024,
                               backupCount=5, encoding=None, delay=0)
 # create file handler which logs even debug messages
-handler.setLevel(logging.DEBUG)
+handler.setLevel(logging.INFO)
 # # create console handler with a higher log level
 ch = logging.StreamHandler()
 ch.setLevel(logging.ERROR)
