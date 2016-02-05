@@ -137,8 +137,6 @@ def setkeyboard(*args, chat_id=chat_id, message="Prova", is_exit=True, hide=Fals
             keyboard.append(arg)
         if is_exit:
             keyboard.append(["Exit"])
-        # print(keyboard)
-        # print(message)
         reply_markup = telegram.ReplyKeyboardMarkup(keyboard)
     else:
         reply_markup = telegram.ReplyKeyboardHide()
@@ -160,7 +158,6 @@ def config():
         if text == "Host":
             if chat_id not in chat_id_host_config:
                 chat_id_host_config.append(chat_id)
-                print(chat_id_host_config)
                 msg = "Write your host"
                 setkeyboard(message=msg, chat_id=chat_id, hide=True)
         elif text == "Port":
@@ -204,7 +201,6 @@ def config():
 def sethost():
     global text
     global chat_id
-    print("called sethost")
     if not text[:7] == ("http://" or "https:/"):
         return "Address not correct, please follow the example.\nEs: http://myaddress.me"
     else:
@@ -216,14 +212,13 @@ def sethost():
         user.host = text
         user.dump(chat_id)
         chat_id_config.remove(chat_id)
-        bot_logger.debug()
+        bot_logger.debug("set host")
         return "Host address setted"
 
 
 def setport():
     global text
     global chat_id
-    print("called setport")
     if not text.isdigit:
         return "Port not correct, make sure is a number.\nEs: 80, 8080"
     else:
@@ -232,31 +227,29 @@ def setport():
         user.port = text
         user.dump(chat_id)
         chat_id_config.remove(chat_id)
-        bot_logger.debug()
+        bot_logger.debug("set port")
         return "Port setted"
 
 
 def setusername():
     global text
     global chat_id
-    print("called setusername")
     chat_id_user_config.remove(chat_id)
     user = ClassUsers.load(chat_id)
     user.hostname = text
     user.dump(chat_id)
     chat_id_config.remove(chat_id)
-    bot_logger.debug()
+    bot_logger.debug("set username")
     return "Hostname setted"
 
 
 def setpassword():
     global text
     global chat_id
-    print("called setusername")
     chat_id_password_config.remove(chat_id)
     user = ClassUsers.load(chat_id)
     user.password = text
     user.dump(chat_id)
     chat_id_config.remove(chat_id)
-    bot_logger.debug()
+    bot_logger.debug("set password")
     return "Password setted"
