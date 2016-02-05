@@ -89,7 +89,6 @@ def updateloop():
             # Error
             logger.exception("Exit from loop!")
             logger.error("Exit from loop!")
-            print("Exit loop")
             return
 
 

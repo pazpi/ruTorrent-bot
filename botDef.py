@@ -76,6 +76,9 @@ def firstconfig():
     if chat_id not in chat_id_f_config:
         chat_id_f_config.append(chat_id)
         answer = "Tell me the host address \n Es: http://myaddress.me"
+        # Create user instance
+        user = ClassUsers.ChatIDUser()
+        user.dump(chat_id)
         writeconfig("0", 0)
         bot_logger.info("Firstconfig " + chat_id)
     else:
