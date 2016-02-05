@@ -155,8 +155,7 @@ def getcommand(msg, chat_id):
                 answer = "Hash added successfully"
         elif command[2:8] == 'magnet':
             magnet = command[2:-2]
-            handleTorrent.addmagnet(magnet, chat_id)
-            answer = 'Magnet added successfully!'
+            answer = handleTorrent.addmagnet(magnet, chat_id)
             logger.debug('Answer: Manget added')
         else:
             answer = 'No command or magnet found. Press /help for the list of the supported commands'
