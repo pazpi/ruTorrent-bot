@@ -21,9 +21,8 @@ def hash2magnet(hash):
     return magnet
 
 
-# TODO test this function
 def addmagnet(torrent, chat_id):
     user = ClassUsers.load(chat_id)
     # http://pazpi.ecc to replace with the setting from the user
-    url = user.host + ":" + user.port + 'ruTorrent/php/addtorrent.php?url=' + torrent
+    url = user.host + ":" + user.port + '/ruTorrent/php/addtorrent.php?url=' + torrent
     requests.post(url, auth=HTTPBasicAuth(user.username, user.password))

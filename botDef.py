@@ -2,11 +2,11 @@
 # telegram module for easy work with bot conf
 import telegram
 # file used to store sensible data, like API key
-import token
+import botToken
 import logging
 import ClassUsers
 
-logger = logging.getLogger(__name__)
+bot_logger = logging.getLogger("main.botDef")
 
 startTxt = "Hi! I'm a bot developed by @pazpi and @martinotu to add torrent to your seedmachine \n" \
            "Available commands: \n- /help \n- /info \n- /hash"
@@ -17,7 +17,7 @@ helpTxt = "ruTorrentPyBot \n\nAdd torrent directly from telegram. \n\n Commands:
           "/info - Show more info about me \n/hash - To add a torrent from his hash\n\n" \
           "To add a torrent from his magnet link just sent the link :D\n\n"
 
-bot = telegram.Bot(token.TOKEN)
+bot = telegram.Bot(botToken.TOKEN)
 text = ''
 chat_id = ''
 update_id = ''
@@ -32,13 +32,9 @@ chat_id_user_config = []
 chat_id_password_config = []
 
 
-# def __init__(self):
-#     logger = logging.getLogger("telegram_bot.Bot")
-#     logger.info("Bot creation")
-
-
 def update():
     updates = bot.getUpdates(offset=LAST_UPDATE_ID)
+    bot_logger.debug("Get updates")
     global text
     global chat_id
     global update_id
@@ -52,24 +48,8 @@ def update():
 def read_user_info():
     global chat_id
     user = ClassUsers.load(chat_id)
+    bot_logger.debug("Read user")
     return user
-
-
-def readconfig():
-    parameter = ["", "", "", "", "", ""]
-    global chat_id
-    name_file = "chat_id_file/" + str(chat_id)
-    f = open(name_file, "r")  # doesn't create the file
-    for i in range(6):
-        parameter[i] = f.readline()[:-1]
-        # print(parameter[i])
-    f.close()
-    return parameter
-
-
-def write_user_info(user):
-    global chat_id
-    user.dump(chat_id)
 
 
 def writeconfig(data, index):
@@ -86,29 +66,18 @@ def writeconfig(data, index):
     elif index == 4:
         user.password = data
     user.dump(chat_id)
-    # parameter = readconfig()
-    # print("parameter before writing: ")
-    # print(parameter)
-    # name_file = "chat_id_file/" + str(chat_id)
-    # f = open(name_file, "w")
-    # parameter.pop(index)
-    # parameter.insert(index, data)
-    # print("parameter after writing")
-    # print(parameter)
-    # f.close()
-    # name_file = "chat_id_file/" + str(chat_id)
-    # f = open(name_file, "w")
-    # f.write('\n'.join(str(line) for line in parameter))
-    # f.close()
+    bot_logger.debug("Writeconfig")
 
 
 def firstconfig():
     global chat_id
     global text
+    bot_logger.debug("FirstConfig")
     if chat_id not in chat_id_f_config:
         chat_id_f_config.append(chat_id)
         answer = "Tell me the host address \n Es: http://myaddress.me"
         writeconfig("0", 0)
+        bot_logger.info("Firstconfig " + chat_id)
     else:
         user = read_user_info()
         if user.status == "0":
@@ -120,7 +89,7 @@ def firstconfig():
                 writeconfig(text, 1)
         elif user.status == "1":
             if text.isdigit():
-                if 65536 >= text > 0:
+                if 65536 >= int(text) > 0:
                     writeconfig(text, 2)
                     writeconfig("2", 0)
                     answer = "Tell me the host username."
@@ -136,7 +105,6 @@ def firstconfig():
             writeconfig(text, 4)
             writeconfig("4", 0)
             user = read_user_info()
-            # parameter = readconfig() # read the file again to update the password data
             msg = "Correct? \nAddress: " + user.host + "\nPort: " + user.port + "\nUsername: " + user.username + \
                   "\nPassword: " + user.password
             setkeyboard(["YES", "NO"], message=msg, chat_id=chat_id, hide=False, is_exit=False)
@@ -177,11 +145,14 @@ def setkeyboard(*args, chat_id=chat_id, message="Prova", is_exit=True, hide=Fals
 def config():
     global chat_id
     global text
-    global chat_id_host_config
+    bot_logger.debug('Config Called')
+    print('Config Called log')
+    # global chat_id_host_config
     if chat_id not in chat_id_config:
         chat_id_config.append(chat_id)
         msg = "Which parameter you want to change?"
-        setkeyboard(["Host", "Port"], ["Username", "Password"], message=msg, chat_id=chat_id, hide=False, is_exit=True)
+        setkeyboard(["Host", "Port"], ["Username", "Password"], ["List data"], message=msg, chat_id=chat_id, hide=False,
+                    is_exit=True)
     else:
         # User has type something form the custom keyboard
         if text == "Host":
@@ -205,13 +176,20 @@ def config():
                 chat_id_password_config.append(chat_id)
                 msg = "Write your password.\nWrite NULL to leave it blank"
                 setkeyboard(message=msg, chat_id=chat_id, hide=True)
+        elif text == "List data":
+            user = read_user_info()
+            msg = "Hostname: " + user.host + "\n" \
+                  "Port: " + user.port + "\n" \
+                  "Username: " + user.username + "\n" \
+                  "Password: " + user.password
+            setkeyboard(message=msg, chat_id=chat_id, hide=True)
         elif text == "Exit":
             chat_id_config.remove(chat_id)
             msg = "Config ended"
             setkeyboard(message=msg, chat_id=chat_id, hide=True)
             return ""
         else:
-            logger.debug("error config")
+            bot_logger.debug("error config")
             return ""
 
 
@@ -230,6 +208,7 @@ def sethost():
         user.host = text
         user.dump(chat_id)
         chat_id_config.remove(chat_id)
+        bot_logger.debug()
         return "Host address setted"
 
 
@@ -245,6 +224,7 @@ def setport():
         user.port = text
         user.dump(chat_id)
         chat_id_config.remove(chat_id)
+        bot_logger.debug()
         return "Port setted"
 
 
@@ -257,6 +237,7 @@ def setusername():
     user.hostname = text
     user.dump(chat_id)
     chat_id_config.remove(chat_id)
+    bot_logger.debug()
     return "Hostname setted"
 
 
@@ -269,4 +250,5 @@ def setpassword():
     user.password = text
     user.dump(chat_id)
     chat_id_config.remove(chat_id)
+    bot_logger.debug()
     return "Password setted"

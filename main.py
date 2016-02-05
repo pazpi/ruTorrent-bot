@@ -23,17 +23,34 @@
 # add the option to have multiple session
 
 
-import botDef
 import handleTorrent
 # xmlrpc module for rtorrent communication
 # import xmlrpc.client
 from time import sleep
 import logging
-# import log
+from logging.handlers import RotatingFileHandler
+import botDef
 
-# log.SetLogger()
-# global logger
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger("main")
+logger.setLevel(logging.DEBUG)
+# # Create a file handler where log is located
+handler = RotatingFileHandler('rutorrent.log', mode='a', maxBytes=5 * 1024 * 1024,
+                              backupCount=5, encoding=None, delay=0)
+# create file handler which logs even debug messages
+handler.setLevel(logging.DEBUG)
+# # create console handler with a higher log level
+ch = logging.StreamHandler()
+ch.setLevel(logging.ERROR)
+# # Create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(funcName)s(%(lineno)d) %(message)s')
+handler.setFormatter(formatter)
+ch.setFormatter(formatter)
+# add the handlers to the logger
+logger.addHandler(handler)
+logger.addHandler(ch)
+
+logger.debug('Log initialized')
 
 last_update = 0
 lastMsgId = 0
@@ -50,14 +67,14 @@ commands = {
 
 def main(argv=None):
     if argv is None or len(argv) <= 1:
+        logger.debug("Begin main()")
         init()
 
 
 def init():
     # xmlrpc settings
     # server = xmlrpc.client.ServerProxy(HOST)
-    logger.info("-- init -- BOT creation")
-    print("init")
+    logger.debug("Begin init()")
     # Infinite Loop
     updateloop()
     return
@@ -71,7 +88,7 @@ def updateloop():
         except Exception:
             # Error
             logger.exception("Exit from loop!")
-            # logger.error("Exit from loop!")
+            logger.error("Exit from loop!")
             print("Exit loop")
             return
 
