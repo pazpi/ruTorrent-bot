@@ -8,5 +8,4 @@ env/
 /token.py
 /.idea
 config.py
-botToken.py
 chat_id_file/
