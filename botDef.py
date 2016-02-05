@@ -80,7 +80,7 @@ def firstconfig():
         user = ClassUsers.ChatIDUser()
         user.dump(chat_id)
         writeconfig("0", 0)
-        bot_logger.info("Firstconfig " + chat_id)
+        bot_logger.info("Firstconfig " + str(chat_id))
     else:
         user = read_user_info()
         if user.status == "0":
