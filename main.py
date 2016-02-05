@@ -151,8 +151,7 @@ def getcommand(msg, chat_id):
             if par[1:-1] == "":
                 answer = "Put a hash after the /hash command!"
             else:
-                handleTorrent.addmagnet(handleTorrent.hash2magnet(par), chat_id)
-                answer = "Hash added successfully"
+                answer = handleTorrent.addmagnet(handleTorrent.hash2magnet(par), chat_id)
         elif command[2:8] == 'magnet':
             magnet = command[2:-2]
             answer = handleTorrent.addmagnet(magnet, chat_id)

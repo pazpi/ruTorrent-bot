@@ -26,7 +26,10 @@ def addmagnet(torrent, chat_id):
         user = ClassUsers.load(chat_id)
         # http://pazpi.ecc to replace with the setting from the user
         url = user.host + ":" + user.port + '/ruTorrent/php/addtorrent.php?url=' + torrent
-        requests.post(url, auth=HTTPBasicAuth(user.username, user.password))
-        return 'Magnet added successfully!'
+        try:
+            requests.post(url, auth=HTTPBasicAuth(user.username, user.password))
+            return 'Magnet added successfully!'
+        except requests.exceptions.ConnectionError:
+            return 'Host not reachable'
     except EOFError:
         return 'Host not set, type /start to config your user'
