@@ -146,7 +146,6 @@ def config():
     global chat_id
     global text
     bot_logger.debug('Config Called')
-    print('Config Called log')
     # global chat_id_host_config
     if chat_id not in chat_id_config:
         chat_id_config.append(chat_id)
@@ -177,12 +176,16 @@ def config():
                 msg = "Write your password.\nWrite NULL to leave it blank"
                 setkeyboard(message=msg, chat_id=chat_id, hide=True)
         elif text == "List data":
-            user = read_user_info()
-            msg = "Hostname: " + user.host + "\n" \
-                  "Port: " + user.port + "\n" \
-                  "Username: " + user.username + "\n" \
-                  "Password: " + user.password
-            setkeyboard(message=msg, chat_id=chat_id, hide=True)
+            try:
+                user = read_user_info()
+                msg = "Hostname: " + user.host + "\n" \
+                      "Port: " + user.port + "\n" \
+                      "Username: " + user.username + "\n" \
+                      "Password: " + user.password
+                setkeyboard(message=msg, chat_id=chat_id, hide=True)
+            except EOFError:
+                msg = "List empty, type /start to create a new user"
+                setkeyboard(message=msg, chat_id=chat_id, hide=True)
         elif text == "Exit":
             chat_id_config.remove(chat_id)
             msg = "Config ended"
