@@ -1,3 +1,6 @@
+# ClassUsers.py
+# Class user with one method for write user data and a function for store it
+
 import pickle
 import logging
 user_logger = logging.getLogger("main.classUsers")
@@ -22,8 +25,9 @@ class ChatIDUser:
 
 
 def load(chat_id):
-    with open("chat_id_file/"+str(chat_id)+'.pkl', 'rb') as load_input:
-        user_logger.debug("load success")
-        return pickle.load(load_input)
-
-
+    try:
+        with open("chat_id_file/"+str(chat_id)+'.pkl', 'rb') as load_input:
+            user_logger.debug("load success")
+            return pickle.load(load_input)
+    except EOFError:
+        user_logger.error("EOFError: Error reading file " + str(chat_id))

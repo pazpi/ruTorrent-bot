@@ -1,9 +1,13 @@
 # botDef.py
+# This module is essentially the core of the bot
+# This file is responsible for all the communication with the Telegram server, and user set his data
+
 # telegram module for easy work with bot conf
 import telegram
 # file used to store sensible data, like API key
 import botToken
 import logging
+# Internal module with user class
 import ClassUsers
 
 bot_logger = logging.getLogger("main.botDef")
@@ -21,9 +25,9 @@ bot = telegram.Bot(botToken.TOKEN)
 text = ''
 chat_id = ''
 update_id = ''
-username = ''
 LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
 
+# Array for storing user step into configuration
 chat_id_f_config = []
 chat_id_config = []
 chat_id_host_config = []
@@ -38,11 +42,12 @@ def update():
     global text
     global chat_id
     global update_id
-    global username
     for update_data in updates:
         text = update_data.message.text
         chat_id = update_data.message.chat.id
         update_id = update_data.update_id
+        bot_logger.debug("Text: " + str(text))
+        bot_logger.debug("Chat_ID " + str(chat_id))
 
 
 def read_user_info():
@@ -83,27 +88,31 @@ def firstconfig():
         bot_logger.info("Firstconfig " + str(chat_id))
     else:
         user = read_user_info()
+        # Set server address
         if user.status == "0":
             if not text[:7] == ("http://" or "https:/"):
                 answer = "Address not correct, please follow the example.\nEs: http://myaddress.me"
             else:
-                answer = "Tell me the host port \n Es: 8080"
                 writeconfig("1", 0)
                 writeconfig(text, 1)
+                answer = "Tell me the host port \n Es: 8080"
+        # Set port
         elif user.status == "1":
             if text.isdigit():
                 if 65536 >= int(text) > 0:
                     writeconfig(text, 2)
                     writeconfig("2", 0)
-                    answer = "Tell me the host username."
+                    answer = "Tell me the host username.\nType `NULL` if you haven't a username"
                 else:
                     answer = "Out of range.\nMust be between 1 and 65536"
             else:
                 answer = "Port not valid.\nEs: 8080"
+        # Set username
         elif user.status == "2":
             writeconfig(text, 3)
             writeconfig("3", 0)
-            answer = "Tell me the host password"
+            answer = "Tell me the host password\nType `NULL` if you haven't a password"
+        # Set password
         elif user.status == "3":
             writeconfig(text, 4)
             writeconfig("4", 0)
@@ -112,6 +121,7 @@ def firstconfig():
                   "\nPassword: " + user.password
             setkeyboard(["YES", "NO"], message=msg, chat_id=chat_id, hide=False, is_exit=False)
             answer = ""
+        # Ask if everything is ok
         elif user.status == "4":
             if text == "YES":
                 msg = "All set, have fun and keep seeding!"
