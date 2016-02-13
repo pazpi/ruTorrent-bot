@@ -21,7 +21,6 @@ bot = telegram.Bot(botToken.TOKEN)
 text = ''
 chat_id = ''
 update_id = ''
-username = ''
 LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
 
 chat_id_f_config = []
@@ -38,11 +37,12 @@ def update():
     global text
     global chat_id
     global update_id
-    global username
     for update_data in updates:
         text = update_data.message.text
         chat_id = update_data.message.chat.id
         update_id = update_data.update_id
+        bot_logger.debug("Text: " + str(text))
+        bot_logger.debug("Chat_ID " + str(chat_id))
 
 
 def read_user_info():
