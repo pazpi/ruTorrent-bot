@@ -29,6 +29,7 @@ import handleTorrent
 from time import sleep
 import logging
 from logging.handlers import RotatingFileHandler
+import threading
 import botDef
 
 
@@ -97,10 +98,16 @@ def manageupdates():
     # If newer than the initial
     if botDef.LAST_UPDATE_ID < botDef.update_id:
         if botDef.text:
-            answer = getcommand(botDef.text, botDef.chat_id)
-            if answer:
-                botDef.bot.sendMessage(chat_id=botDef.chat_id, text=answer)
+            thread = threading.Thread(target=setanswer, args=(botDef.text,botDef.chat_id,))
+            logger.info("Start new thread from " + str(botDef.chat_id))
+            thread.start()
         botDef.LAST_UPDATE_ID = botDef.update_id
+
+
+def setanswer(text, chat_id):
+    answer = getcommand(text, chat_id)
+    if answer:
+        botDef.bot.sendMessage(chat_id=chat_id, text=answer)
 
 
 def getcommand(msg, chat_id):
