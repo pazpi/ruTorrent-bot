@@ -1,9 +1,13 @@
 # botDef.py
+# This module is essentially the core of the bot
+# This file is responsible for all the communication with the Telegram server, and user set his data
+
 # telegram module for easy work with bot conf
 import telegram
 # file used to store sensible data, like API key
 import botToken
 import logging
+# Internal module with user class
 import ClassUsers
 
 bot_logger = logging.getLogger("main.botDef")
@@ -23,6 +27,7 @@ chat_id = ''
 update_id = ''
 LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
 
+# Array for storing user step into configuration
 chat_id_f_config = []
 chat_id_config = []
 chat_id_host_config = []
