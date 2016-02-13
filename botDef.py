@@ -83,27 +83,31 @@ def firstconfig():
         bot_logger.info("Firstconfig " + str(chat_id))
     else:
         user = read_user_info()
+        # Set server address
         if user.status == "0":
             if not text[:7] == ("http://" or "https:/"):
                 answer = "Address not correct, please follow the example.\nEs: http://myaddress.me"
             else:
-                answer = "Tell me the host port \n Es: 8080"
                 writeconfig("1", 0)
                 writeconfig(text, 1)
+                answer = "Tell me the host port \n Es: 8080"
+        # Set port
         elif user.status == "1":
             if text.isdigit():
                 if 65536 >= int(text) > 0:
                     writeconfig(text, 2)
                     writeconfig("2", 0)
-                    answer = "Tell me the host username."
+                    answer = "Tell me the host username.\nType `NULL` if you haven't a username"
                 else:
                     answer = "Out of range.\nMust be between 1 and 65536"
             else:
                 answer = "Port not valid.\nEs: 8080"
+        # Set username
         elif user.status == "2":
             writeconfig(text, 3)
             writeconfig("3", 0)
-            answer = "Tell me the host password"
+            answer = "Tell me the host password\nType `NULL` if you haven't a password"
+        # Set password
         elif user.status == "3":
             writeconfig(text, 4)
             writeconfig("4", 0)
@@ -112,6 +116,7 @@ def firstconfig():
                   "\nPassword: " + user.password
             setkeyboard(["YES", "NO"], message=msg, chat_id=chat_id, hide=False, is_exit=False)
             answer = ""
+        # Ask if everything is ok
         elif user.status == "4":
             if text == "YES":
                 msg = "All set, have fun and keep seeding!"
