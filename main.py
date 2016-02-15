@@ -85,7 +85,7 @@ def updateloop():
     while True:
         try:
             manageupdates()
-            sleep(0.2)
+            sleep(2)
         except Exception:
             # Error
             logger.exception("Exit from loop!")
