@@ -19,14 +19,18 @@ def addmagnet(torrent, chat_id):
         url = user.host + ":" + user.port + '/ruTorrent/php/addtorrent.php?url=' + torrent
         if not (user.username == "NULL" or user.password == "NULL"):
             try:
-                requests.post(url, auth=HTTPBasicAuth(user.username, user.password))
-                return 'Magnet added successfully!'
+                if requests.post(url, auth=HTTPBasicAuth(user.username, user.password)):
+                    return 'Magnet added successfully!'
+                else:
+                    return 'Error communicating with server'
             except requests.exceptions.ConnectionError:
                 return 'Host not reachable'
         else:
             try:
-                requests.post(url)
-                return 'Magnet added successfully!'
+                if requests.post(url):
+                    return 'Magnet added successfully!'
+                else:
+                    return 'Error communicating with server'
             except requests.exceptions.ConnectionError:
                 return 'Host not reachable'
     except EOFError:
