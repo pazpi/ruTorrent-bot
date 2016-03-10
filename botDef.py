@@ -246,7 +246,7 @@ def setusername():
     global chat_id
     chat_id_user_config.remove(chat_id)
     user = ClassUsers.load(chat_id)
-    user.hostname = text
+    user.username= text
     user.dump(chat_id)
     chat_id_config.remove(chat_id)
     bot_logger.debug("set username")
