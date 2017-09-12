@@ -250,7 +250,7 @@ def setusername():
     user.dump(chat_id)
     chat_id_config.remove(chat_id)
     bot_logger.debug("set username")
-    return "Hostname setted"
+    return "Username setted"
 
 
 def setpassword():
