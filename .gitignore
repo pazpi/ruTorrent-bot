@@ -1,9 +1,10 @@
 env/
 /.project
 /.pydevproject
-/rutorrent.log
+*.log
 /__pycache__
 /__init__.py
 /.idea
-/botToken.py
+token.py
 chat_id_file/
+.ropeproject
